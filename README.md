@@ -1,4 +1,4 @@
-# Restaurant Management System
+# com.att.tdp.bisbis10.entity.Restaurant Management System
 
 ## Overview
 The bisbis10 restaurant management system is a backend service designed to handle various operations related to restaurants, their dishes, and ratings. The system aims to provide a comprehensive platform for managing restaurant data, including details about the restaurants, their cuisines, dishes, and customer ratings.
@@ -40,7 +40,7 @@ Candidates are expected to design and implement the above APIs, adhering to REST
 
 | API Description           | Endpoint               | Request Body                          | Response Status | Response Body |
 |---------------------------|------------------------|---------------------------------------|-----------------|---------------|
-| Order    | POST /order          | {"restaurantId": 2, "orderItems":[{"dishId":12,"amount":1},{"dishId":14,"amount":1} ]} ]   | 200 OK          |  {orderId:"ef401fc8-d545-424b-928d-4789cd47bb6e"}             |
+| Order    | POST /bisOrder          | {"restaurantId": 2, "orderItems":[{"dishId":12,"amount":1},{"dishId":14,"amount":1} ]} ]   | 200 OK          |  {orderId:"ef401fc8-d545-424b-928d-4789cd47bb6e"}             |
 
 ### Dishes APIs
 

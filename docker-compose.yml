@@ -6,10 +6,10 @@ services:
       POSTGRES_USER: bisbis10
       POSTGRES_PASSWORD: bisbis10
       POSTGRES_DB: bisbis10
-  #  volumes:
-   #   - type: bind
-   #     source: ./data
-   #     target: /var/lib/postgresql/data --> in case u need to save data to local storage
+    #  volumes:
+    #   - type: bind
+    #     source: ./data
+    #     target: /var/lib/postgresql/data --> in case u need to save data to local storage
     ports:
       - target: 5432
         published: 5432
