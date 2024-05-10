@@ -18,6 +18,9 @@ public class RestaurantValidator implements Validator {
         if (restaurant.getName() == null || restaurant.getName().isEmpty()) {
             errors.rejectValue("name", "name.empty", "Name must not be empty");
         }
+        if (restaurant.getAverageRating() == null || restaurant.getAverageRating() < 0) {
+            errors.rejectValue("averageRating", "averageRating.negative", "averageRating must be positive");
+        }
         if (restaurant.getCuisines() == null || restaurant.getCuisines().isEmpty()) {
             errors.rejectValue("cuisines", "cuisines.empty", "Cuisines must not be empty");
         }

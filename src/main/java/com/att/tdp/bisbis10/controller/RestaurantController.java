@@ -44,6 +44,9 @@ public class RestaurantController {
     @GetMapping("/{id}")
     public ResponseEntity<EntityModel<Restaurant>> getRestaurantById(@PathVariable Long id) {
         Restaurant restaurant = restaurantService.getRestaurantById(id);
+        if (restaurant == null) {
+            return ResponseEntity.notFound().build();
+        }
         EntityModel<Restaurant> restaurantModel = assembler.toModel(restaurant);
         return new ResponseEntity<>(restaurantModel, HttpStatus.OK);
     }
