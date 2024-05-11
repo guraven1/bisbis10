@@ -11,7 +11,7 @@ public class RestaurantNotFoundAdvice {
     @ResponseBody
     @ExceptionHandler(RestaurantNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    String employeeNotFoundHandler(RestaurantNotFoundException ex) {
+    final String restaurantNotFoundHandler(final RestaurantNotFoundException ex) {
         return ex.getMessage();
     }
 }

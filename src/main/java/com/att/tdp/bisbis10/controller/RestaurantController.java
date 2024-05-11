@@ -2,6 +2,7 @@ package com.att.tdp.bisbis10.controller;
 
 import com.att.tdp.bisbis10.assembler.RestaurantModelAssembler;
 import com.att.tdp.bisbis10.entity.Restaurant;
+import com.att.tdp.bisbis10.exception.RestaurantNotFoundException;
 import com.att.tdp.bisbis10.service.RestaurantService;
 import com.att.tdp.bisbis10.validators.RestaurantValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,24 +36,24 @@ public class RestaurantController {
     }
 
     @GetMapping(params = "cuisine")
-    public ResponseEntity<CollectionModel<EntityModel<Restaurant>>> getRestaurantsByCuisine(@RequestParam String cuisine) {
+    public ResponseEntity<CollectionModel<EntityModel<Restaurant>>> getRestaurantsByCuisine
+            (@RequestParam final String cuisine) {
         List<Restaurant> restaurants = restaurantService.getRestaurantsByCuisine(cuisine);
         CollectionModel<EntityModel<Restaurant>> restaurantModels = assembler.toCollectionModel(restaurants);
         return new ResponseEntity<>(restaurantModels, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<EntityModel<Restaurant>> getRestaurantById(@PathVariable Long id) {
+    public ResponseEntity<EntityModel<Restaurant>> getRestaurantById(@PathVariable final Long id)
+            throws RestaurantNotFoundException {
         Restaurant restaurant = restaurantService.getRestaurantById(id);
-        if (restaurant == null) {
-            return ResponseEntity.notFound().build();
-        }
         EntityModel<Restaurant> restaurantModel = assembler.toModel(restaurant);
         return new ResponseEntity<>(restaurantModel, HttpStatus.OK);
     }
 
     @PostMapping
-    public ResponseEntity<EntityModel<Restaurant>> addRestaurant(@Valid @RequestBody Restaurant restaurant, BindingResult bindingResult) {
+    public ResponseEntity<EntityModel<Restaurant>> addRestaurant
+            (@Valid @RequestBody final Restaurant restaurant, BindingResult bindingResult) {
         validator.validate(restaurant, bindingResult);
         if (bindingResult.hasErrors()) {
             return ResponseEntity.badRequest().build();
@@ -63,31 +64,26 @@ public class RestaurantController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<EntityModel<Restaurant>> updateRestaurant(@PathVariable Long id, @Valid @RequestBody Restaurant restaurant, BindingResult bindingResult) {
+    public ResponseEntity<EntityModel<Restaurant>> updateRestaurant
+            (@PathVariable final Long id, @Valid @RequestBody final Restaurant restaurant, BindingResult bindingResult)
+            throws RestaurantNotFoundException {
+
         validator.validateCuisines(restaurant, bindingResult);
+
         if (bindingResult.hasErrors()) {
             return ResponseEntity.badRequest().build();
         }
-        if (restaurantService.getRestaurantById(id) == null) {
-            return ResponseEntity.notFound().build();
-        }
 
         restaurantService.updateRestaurant(id, restaurant);
-        Restaurant updatedRestaurant = restaurantService.getRestaurantById(id); // Assuming updateRestaurant returns the updated restaurant
 
-        EntityModel<Restaurant> restaurantModel = assembler.toModel(updatedRestaurant);
+        EntityModel<Restaurant> restaurantModel = assembler.toModel(restaurantService.getRestaurantById(id));
         return new ResponseEntity<>(restaurantModel, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteRestaurant(@PathVariable Long id) {
-        Restaurant existingRestaurant = restaurantService.getRestaurantById(id);
-        if (existingRestaurant == null) {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<Void> deleteRestaurant(@PathVariable final Long id) {
 
         restaurantService.deleteRestaurant(id);
         return ResponseEntity.noContent().build();
     }
 }
-

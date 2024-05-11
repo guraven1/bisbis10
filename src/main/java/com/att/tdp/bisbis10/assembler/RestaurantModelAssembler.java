@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 public class RestaurantModelAssembler implements RepresentationModelAssembler<Restaurant, EntityModel<Restaurant>> {
 
     @Override
-    public EntityModel<Restaurant> toModel(Restaurant restaurant) {
+    public EntityModel<Restaurant> toModel(final Restaurant restaurant) {
 
         return EntityModel.of(restaurant, //
                 linkTo(methodOn(RestaurantController.class).getRestaurantById(restaurant.getId())).withSelfRel(),

@@ -10,11 +10,8 @@ public class OrderService {
     @Autowired
     private OrderRepository orderRepository;
 
-    public BisOrder placeOrder(BisOrder bisOrder) {
-        return orderRepository.save(bisOrder);
+    public void placeOrder(final BisOrder bisOrder) {
+        orderRepository.save(bisOrder);
     }
 
-    public void cancelOrder(BisOrder bisOrder) {
-        orderRepository.delete(bisOrder);
-    }
 }

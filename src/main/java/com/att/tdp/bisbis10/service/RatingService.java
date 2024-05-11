@@ -17,7 +17,7 @@ public class RatingService {
     private RestaurantService restaurantService;
 
     @Transactional
-    public void addRating(Rating rating, Restaurant restaurant) {
+    public void addRating(final Rating rating, final Restaurant restaurant) {
         rating.setRestaurant(restaurant);
         ratingRepository.save(rating);
         Long restaurantId = rating.getRestaurantId();

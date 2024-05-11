@@ -16,7 +16,7 @@ public class DishService {
     private DishRepository dishRepository;
     @Autowired
     private RestaurantRepository restaurantRepository;
-    public void addDish(Long restaurantId, Dish dish) {
+    public void addDish(final Long restaurantId, final Dish dish) {
         Optional<Restaurant> parentRestaurant = restaurantRepository.findById(restaurantId);
         if (parentRestaurant.isPresent()){
             dish.setRestaurant(parentRestaurant.get());
@@ -24,7 +24,7 @@ public class DishService {
         }
     }
 
-    public void updateDish(Long dishId, Dish changed_dish) {
+    public void updateDish(final Long dishId, final Dish changed_dish) {
         Optional<Dish> optionalDish = dishRepository.findById(dishId);
         if (optionalDish.isPresent()) {
             Dish dish = optionalDish.get();
@@ -34,13 +34,12 @@ public class DishService {
         }
     }
 
-    public void deleteDish(Long restaurantId, Long dishId) {
+    public void deleteDish(final Long restaurantId, final Long dishId) {
         dishRepository.deleteById(dishId);
     }
 
-    public List<Dish> getDishesByRestaurant(Long restaurantId) {
+    public List<Dish> getDishesByRestaurant(final Long restaurantId) {
         Optional<Restaurant> restaurant = restaurantRepository.findById(restaurantId);
         return restaurant.map(value -> dishRepository.findByRestaurant(value)).orElse(null);
     }
 }
-

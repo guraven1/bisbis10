@@ -1,7 +1,7 @@
 package com.att.tdp.bisbis10.controller;
 
-import com.att.tdp.bisbis10.repository.DishRepository;
 import com.att.tdp.bisbis10.entity.Dish;
+import com.att.tdp.bisbis10.repository.DishRepository;
 import com.att.tdp.bisbis10.service.DishService;
 import com.att.tdp.bisbis10.service.RestaurantService;
 import com.att.tdp.bisbis10.validators.DishValidator;
@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/restaurants/{id}/dishes")
@@ -25,6 +24,7 @@ public class DishController {
     public DishController(DishService dishService) {
         this.dishService = dishService;
     }
+
     @Autowired
     private DishRepository dishRepository;
     @Autowired
@@ -33,7 +33,9 @@ public class DishController {
     private DishValidator validator;
 
     @PostMapping
-    public ResponseEntity<String> addDish(@PathVariable("id") Long restaurantId, @Valid @RequestBody Dish dish, BindingResult bindingResult) {
+    public ResponseEntity<String> addDish(@PathVariable("id") final Long restaurantId,
+                                          @Valid @RequestBody final Dish dish,
+                                          BindingResult bindingResult) {
         validator.validate(dish, bindingResult);
         if (bindingResult.hasErrors()) {
             return ResponseEntity.badRequest().body("Validation failed: " + bindingResult.getAllErrors());
@@ -46,7 +48,8 @@ public class DishController {
     }
 
     @PutMapping("/{dishId}")
-    public ResponseEntity<String> updateDish(@PathVariable("id") Long restaurantId, @PathVariable Long dishId,
+    public ResponseEntity<String> updateDish(@PathVariable("id") final Long restaurantId,
+                                             @PathVariable final Long dishId,
                                              @Valid @RequestBody Dish dish, BindingResult bindingResult) {
         validator.validateUpdate(dish, bindingResult);
         if (bindingResult.hasErrors()) {
@@ -63,7 +66,8 @@ public class DishController {
     }
 
     @DeleteMapping("/{dishId}")
-    public ResponseEntity<String> deleteDish(@PathVariable("id") Long restaurantId, @PathVariable Long dishId) {
+    public ResponseEntity<String> deleteDish(@PathVariable("id") final Long restaurantId,
+                                             @PathVariable final Long dishId) {
         if (restaurantService.getRestaurantById(restaurantId) == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Restaurant not found");
         }
@@ -75,7 +79,7 @@ public class DishController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Dish>> getDishesByRestaurant(@PathVariable("id") Long restaurantId) {
+    public ResponseEntity<List<Dish>> getDishesByRestaurant(@PathVariable("id") final Long restaurantId) {
         List<Dish> dishes = dishService.getDishesByRestaurant(restaurantId);
         return new ResponseEntity<>(dishes, HttpStatus.OK);
     }

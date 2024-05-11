@@ -19,7 +19,7 @@ public class OrderItem {
     public OrderItem(){
         super();
     }
-    public OrderItem(long dishId, int amount) {
+    public OrderItem(final Long dishId, final int amount) {
         super();
         this.dishId = dishId;
         this.amount = amount;
@@ -33,4 +33,3 @@ public class OrderItem {
     public BisOrder getOrder() {return bisOrder;}
     public void setOrder(BisOrder bisOrder) {this.bisOrder = bisOrder;}
 }
-

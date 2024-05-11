@@ -1,6 +1,6 @@
 package com.att.tdp.bisbis10.controller;
 
-import com.att.tdp.bisbis10.DTO.OrderDTO;
+import com.att.tdp.bisbis10.assembler.OrderModelAssembler;
 import com.att.tdp.bisbis10.entity.BisOrder;
 import com.att.tdp.bisbis10.repository.DishRepository;
 import com.att.tdp.bisbis10.entity.Dish;
@@ -10,8 +10,9 @@ import com.att.tdp.bisbis10.service.DishService;
 import com.att.tdp.bisbis10.service.OrderService;
 import com.att.tdp.bisbis10.service.RestaurantService;
 import com.att.tdp.bisbis10.validators.OrderItemValidator;
-import com.att.tdp.bisbis10.validators.OrdersValidator;
+import com.att.tdp.bisbis10.validators.BisOrderValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -25,7 +26,7 @@ import java.util.Optional;
 public class OrderController {
     private final OrderService orderService;
     @Autowired
-    public OrderController(OrderService orderService) {
+    public OrderController(final OrderService orderService) {
         this.orderService = orderService;
     }
     @Autowired
@@ -35,11 +36,13 @@ public class OrderController {
     @Autowired
     private DishRepository dishRepository;
     @Autowired
-    private OrdersValidator validator;
+    private BisOrderValidator validator;
     @Autowired
     private OrderItemValidator itemValidator;
+    @Autowired
+    private OrderModelAssembler assembler;
     @PostMapping
-    public ResponseEntity<Object> placeOrder(@Valid @RequestBody BisOrder bisOrder, BindingResult bindingResult) {
+    public ResponseEntity<Object> placeOrder(@Valid @RequestBody final BisOrder bisOrder, BindingResult bindingResult) {
         validator.validate(bisOrder, bindingResult);
         Restaurant restaurant = restaurantService.getRestaurantById(bisOrder.getRestaurantId());
         if (restaurant == null) {
@@ -53,6 +56,10 @@ public class OrderController {
                     return ResponseEntity.status(HttpStatus.NOT_FOUND).
                             body(String.format("Dish: %d not in the menu", orderItem.getDishId()));
                 }
+                if (bindingResult.hasErrors()) {
+                    return ResponseEntity.badRequest().
+                            body("Validation failed: " + bindingResult.getAllErrors());
+                }
             }
         }
         if (bindingResult.hasErrors()) {
@@ -60,22 +67,8 @@ public class OrderController {
                     body("Validation failed: " + bindingResult.getAllErrors());
         }
         orderService.placeOrder(bisOrder);
-        bisOrder.setStatus("COMPLETE");
-        OrderDTO orderResponse = new OrderDTO();
-        orderResponse.setOrderId(bisOrder.getOrderId());
-        return new ResponseEntity<>(orderResponse, HttpStatus.OK);
-    }
+        EntityModel<BisOrder> orderModel = assembler.toModel(bisOrder);
 
-    @DeleteMapping("/{orderId}")
-    public ResponseEntity<Object> cancelOrder(@Valid @RequestBody BisOrder bisOrder, BindingResult bindingResult) {
-        if (bisOrder == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Order not found");
-        }
-        if (!bisOrder.getStatus().equals("IN PROGRESS")) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Order cannot be cancelled because it is not in progress");
-        }
-        bisOrder.setStatus("CANCELLED");
-        orderService.cancelOrder(bisOrder);
-        return ResponseEntity.ok("Order cancelled successfully");
+        return new ResponseEntity<>(orderModel, HttpStatus.OK);
     }
 }

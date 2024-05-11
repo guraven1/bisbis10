@@ -33,7 +33,8 @@ public class Restaurant {
     public Restaurant() {
         super();
     }
-    public Restaurant(Long id, String name, Double averageRating, Boolean isKosher, List<String> cuisines) {
+    public Restaurant(final Long id, final String name, final Double averageRating, final Boolean isKosher,
+                      final List<String> cuisines) {
         super();
         this.id = id;
         this.name = name;
@@ -44,29 +45,28 @@ public class Restaurant {
 
     public Long getId(){return id;}
 
-    public void setId(Long id){this.id = id;}
+    public void setId(final Long id){this.id = id;}
 
     public String getName(){return name;}
 
-    public void setName(String name) {this.name = name;}
+    public void setName(final String name) {this.name = name;}
 
     public Double getAverageRating(){
         DecimalFormat df = new DecimalFormat("#.##");
         return Double.parseDouble(df.format(averageRating));
     }
 
-    public void setAverageRating(Double averageRating){this.averageRating = averageRating;}
+    public void setAverageRating(final Double averageRating){this.averageRating = averageRating;}
 
     public boolean getIsKosher(){return this.isKosher;}
 
-    public void setIsKosher(boolean isKosher){this.isKosher = isKosher;}
+    public void setIsKosher(final boolean isKosher){this.isKosher = isKosher;}
 
     public List<String> getCuisines(){return cuisines;}
 
-    public void setCuisines(List<String> cuisines){this.cuisines = cuisines;}
+    public void setCuisines(final List<String> cuisines){this.cuisines = cuisines;}
 
     public List<Dish> getDishes(){return dishes;}
 
-    public void setDishes(List<Dish> dishes){this.dishes = dishes;}
+    public void setDishes(final List<Dish> dishes){this.dishes = dishes;}
 }
-

@@ -20,7 +20,7 @@ public class Dish {
         super();
     }
 
-    public Dish(String name, String description, int price){
+    public Dish(final String name, final String description, final int price){
         this.name = name;
         this.description = description;
         this.price = price;
@@ -28,21 +28,21 @@ public class Dish {
 
     public int getId() { return id; }
 
-    public void setId(int id) { this.id = id; }
+    public void setId(final int id) { this.id = id; }
 
     public Restaurant getRestaurant() { return restaurant; }
 
-    public void setRestaurant(Restaurant restaurant) { this.restaurant = restaurant; }
+    public void setRestaurant(final Restaurant restaurant) { this.restaurant = restaurant; }
 
     public String getName() { return name; }
 
-    public void setName(String name) { this.name = name; }
+    public void setName(final String name) { this.name = name; }
 
     public String getDescription() { return description; }
 
-    public void setDescription(String description) { this.description = description; }
+    public void setDescription(final String description) { this.description = description; }
 
     public int getPrice() { return price; }
 
-    public void setPrice(int price) { this.price = price; }
+    public void setPrice(final int price) { this.price = price; }
 }

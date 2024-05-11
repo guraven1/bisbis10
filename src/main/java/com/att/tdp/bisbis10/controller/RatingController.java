@@ -26,7 +26,7 @@ public class RatingController {
     private RatingValidator validator;
 
     @PostMapping("/ratings")
-    public ResponseEntity<String> addRating(@Valid @RequestBody Rating ratingData, BindingResult bindingResult) {
+    public ResponseEntity<String> addRating(@Valid @RequestBody final Rating ratingData, BindingResult bindingResult) {
 
         validator.validate(ratingData, bindingResult);
         if (bindingResult.hasErrors()) {
@@ -40,4 +40,3 @@ public class RatingController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }
-

@@ -13,7 +13,6 @@ public class BisOrder {
     @UuidGenerator
     private String orderId;
     private Long restaurantId;
-    private String status = "IN PROGRESS";
     @OneToMany(mappedBy = "bisOrder", cascade = CascadeType.ALL,orphanRemoval = true)
     @JsonManagedReference
     private List<OrderItem> orderItems;
@@ -29,17 +28,14 @@ public class BisOrder {
         super();
         this.orderId = UUID.randomUUID().toString();
         this.restaurantId = restaurantId;
-        this.status = status;
         this.orderItems = orderItems;
     }
     public String getOrderId() { return orderId; }
-    public void setOrderId(String orderId) { this.orderId = orderId; }
+    public void setOrderId(final String orderId) { this.orderId = orderId; }
     public Long getRestaurantId() { return restaurantId; }
-    public void setRestaurantId(Long restaurantId) { this.restaurantId = restaurantId; }
-    public String getStatus() { return status; }
-    public void setStatus(String status) {this.status = status; }
+    public void setRestaurantId(final Long restaurantId) { this.restaurantId = restaurantId; }
     public Restaurant getRestaurant() {return restaurant;}
-    public void setRestaurant(Restaurant restaurant) {this.restaurant = restaurant;}
+    public void setRestaurant(final Restaurant restaurant) {this.restaurant = restaurant;}
     public List<OrderItem> getOrderItems() { return orderItems; }
     public void setOrderItems(List<com.att.tdp.bisbis10.entity.OrderItem> orderItems) { this.orderItems = orderItems; }
 }

@@ -19,17 +19,17 @@ public class Rating {
     public Rating(){
         super();
     }
-    public Rating(Long restaurantId, Double rating){
+    public Rating(final Long restaurantId, final Double rating){
         super();
         this.restaurantId = restaurantId;
         this.rating = rating;
     }
     public int getId(){return id;}
-    public void setId(int id){this.id = id;}
+    public void setId(final int id){this.id = id;}
     public Long getRestaurantId(){return restaurantId;}
-    public void setRestaurantId(Long restaurantId){this.restaurantId = restaurantId;}
+    public void setRestaurantId(final Long restaurantId){this.restaurantId = restaurantId;}
     public Restaurant getRestaurant() {return restaurant;}
-    public void setRestaurant(Restaurant restaurant) {this.restaurant = restaurant;}
+    public void setRestaurant(final Restaurant restaurant) {this.restaurant = restaurant;}
     public Double getRating(){return rating;}
-    public void setRating(Double rating){this.rating = rating;}
+    public void setRating(final Double rating){this.rating = rating;}
 }
