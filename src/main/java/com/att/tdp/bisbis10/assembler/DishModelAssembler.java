@@ -1,5 +1,7 @@
 package com.att.tdp.bisbis10.assembler;
 
+import com.att.tdp.bisbis10.controller.DishController;
+import com.att.tdp.bisbis10.controller.OrderController;
 import com.att.tdp.bisbis10.controller.RestaurantController;
 import com.att.tdp.bisbis10.entity.Dish;
 import org.springframework.hateoas.EntityModel;
@@ -17,7 +19,13 @@ public class DishModelAssembler implements RepresentationModelAssembler<Dish, En
 
         return EntityModel.of(dish, //
                 linkTo(methodOn(RestaurantController.class).getRestaurantById(dish.getRestaurant().
-                        getId())).withSelfRel(),
-                linkTo(dish.getRestaurant().getDishes()).withRel("dishes"));
+                        getId())).withRel("restaurant"),
+                linkTo(methodOn(DishController.class).
+                        getDish(dish.getRestaurant().getId(), dish.getId())).withSelfRel(),
+                linkTo(methodOn(RestaurantController.class).getAllRestaurants()).withRel("restaurants"),
+                linkTo(methodOn(RestaurantController.class).placeOrderForm(dish.getRestaurant().
+                        getId())).withRel("placeOrderForm"),
+                linkTo(methodOn(RestaurantController.class).rateRestaurantForm(dish.getRestaurant().
+                        getId())).withRel("rateRestaurantForm"));
     }
 }

@@ -33,6 +33,17 @@ public class DishService {
     }
 
     /**
+     * Retrieves a dish by its ID.
+     *
+     * @param dishId the ID of the dish to retrieve
+     * @return the retrieved dish
+     * @throws DishNotFoundException if the dish with the given ID is not found
+     */
+    public Dish getDishById(final Long dishId) throws DishNotFoundException {
+        return dishRepository.findById(dishId).orElseThrow(() -> new DishNotFoundException(dishId));
+    }
+
+    /**
      * Update a dish by ID.
      *
      * @param newDish the new dish.

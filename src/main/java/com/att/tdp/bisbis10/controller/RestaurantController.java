@@ -129,4 +129,28 @@ public class RestaurantController {
         restaurantService.deleteRestaurant(id);
         return ResponseEntity.noContent().build();
     }
+
+    /**
+     * Provides a form for placing an order for a restaurant.
+     *
+     * @param id the ID of the restaurant
+     * @return ResponseEntity containing a link to the order placement form
+     */
+    @GetMapping("/{id}/placeOrder")
+    public ResponseEntity<Void> placeOrderForm(@PathVariable final Long id) {
+        // Return a link to the order placement form
+        return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
+    }
+
+    /**
+     * Provides a form for rating a restaurant.
+     *
+     * @param id the ID of the restaurant
+     * @return ResponseEntity containing a link to the rating form
+     */
+    @GetMapping("/{id}/rateRestaurant")
+    public ResponseEntity<Void> rateRestaurantForm(@PathVariable final Long id) {
+        // Return a link to the rating form
+        return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
+    }
 }

@@ -2,6 +2,9 @@ package com.att.tdp.bisbis10.controller;
 
 import com.att.tdp.bisbis10.assembler.OrderModelAssembler;
 import com.att.tdp.bisbis10.entity.BisOrder;
+import com.att.tdp.bisbis10.exception.DishNotFoundException;
+import com.att.tdp.bisbis10.exception.OrderNotFoundException;
+import com.att.tdp.bisbis10.exception.RestaurantNotFoundException;
 import com.att.tdp.bisbis10.repository.DishRepository;
 import com.att.tdp.bisbis10.entity.Dish;
 import com.att.tdp.bisbis10.entity.OrderItem;
@@ -11,6 +14,8 @@ import com.att.tdp.bisbis10.service.OrderService;
 import com.att.tdp.bisbis10.service.RestaurantService;
 import com.att.tdp.bisbis10.validators.OrderItemValidator;
 import com.att.tdp.bisbis10.validators.BisOrderValidator;
+import org.aspectj.weaver.ast.Or;
+import org.hibernate.query.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
@@ -59,20 +64,16 @@ public class OrderController {
      * @return ResponseEntity containing the placed order or any validation errors
      */
     @PostMapping
-    public ResponseEntity<Object> placeOrder(@Valid @RequestBody final BisOrder bisOrder, BindingResult bindingResult) {
+    public ResponseEntity<Object> placeOrder(@Valid @RequestBody final BisOrder bisOrder,
+                                             BindingResult bindingResult)
+            throws RestaurantNotFoundException, DishNotFoundException {
         validator.validate(bisOrder, bindingResult);
         Restaurant restaurant = restaurantService.getRestaurantById(bisOrder.getRestaurantId());
-        if (restaurant == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Restaurant not found");
-        }
+
         if (bisOrder.getOrderItems() != null){
             for (OrderItem orderItem : bisOrder.getOrderItems()){
                 itemValidator.validate(orderItem, bindingResult);
-                Optional<Dish> dish = dishRepository.findById(orderItem.getDishId());
-                if (dish.isEmpty() || !restaurant.getDishes().contains(dish.get())){
-                    return ResponseEntity.status(HttpStatus.NOT_FOUND).
-                            body(String.format("Dish: %d not in the menu", orderItem.getDishId()));
-                }
+                Dish dish = dishService.getDishById(orderItem.getDishId());
                 if (bindingResult.hasErrors()) {
                     return ResponseEntity.badRequest().
                             body("Validation failed: " + bindingResult.getAllErrors());
@@ -87,5 +88,18 @@ public class OrderController {
         EntityModel<BisOrder> orderModel = assembler.toModel(bisOrder);
 
         return new ResponseEntity<>(orderModel, HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}/cancelOrder")
+    public ResponseEntity<Void> cancelOrderForm(@PathVariable final String id) {
+        // Return a link to the canceling form
+        return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<EntityModel<BisOrder>> getOrderById(@PathVariable String id) throws OrderNotFoundException {
+            BisOrder order = orderService.getOrderById(id);
+            EntityModel<BisOrder> orderModel = assembler.toModel(order);
+            return ResponseEntity.ok(orderModel);
     }
 }

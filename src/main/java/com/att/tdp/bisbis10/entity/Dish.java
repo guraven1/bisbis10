@@ -10,7 +10,7 @@ import jakarta.persistence.*;
 public class Dish {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="restaurant_id")
     @JsonBackReference
@@ -39,9 +39,9 @@ public class Dish {
         this.price = price;
     }
 
-    public int getId() { return id; }
+    public Long getId() { return id; }
 
-    public void setId(final int id) { this.id = id; }
+    public void setId(final Long id) { this.id = id; }
 
     public Restaurant getRestaurant() { return restaurant; }
 

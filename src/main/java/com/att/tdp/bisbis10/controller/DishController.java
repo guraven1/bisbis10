@@ -119,4 +119,22 @@ public class DishController {
         List<Dish> dishes = dishService.getDishesByRestaurant(restaurantId);
         return new ResponseEntity<>(dishes, HttpStatus.OK);
     }
+
+    /**
+     * Retrieves a dish by its ID.
+     *
+     * @param restaurantId the ID of the restaurant
+     * @param dishId       the ID of the dish to retrieve
+     * @return ResponseEntity containing the retrieved dish or an error if the dish is not found
+     * @throws RestaurantNotFoundException if the restaurant with the given ID is not found
+     * @throws DishNotFoundException      if the dish with the given ID is not found
+     */
+    @GetMapping("/{dishId}")
+    public ResponseEntity<EntityModel<Dish>> getDish(@PathVariable("id") final Long restaurantId,
+                                                     @PathVariable final Long dishId)
+            throws RestaurantNotFoundException, DishNotFoundException {
+        Dish dish = dishService.getDishById(dishId);
+        EntityModel<Dish> dishModel = assembler.toModel(dish);
+        return new ResponseEntity<>(dishModel, HttpStatus.OK);
+    }
 }
