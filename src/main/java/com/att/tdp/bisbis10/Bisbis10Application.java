@@ -15,13 +15,13 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @EntityScan("com.att.tdp.bisbis10.*")
 public class Bisbis10Application {
 
-	/**
-	 * Main method to start the Bisbis10 application.
-	 *
-	 * @param args Command line arguments (unused).
-	 */
-	public static void main(final String[] args) {
-		SpringApplication.run(Bisbis10Application.class, args);
-	}
+  /**
+   * Main method to start the Bisbis10 application.
+   *
+   * @param args Command line arguments (unused).
+   */
+  public static void main(final String[] args) {
+    SpringApplication.run(Bisbis10Application.class, args);
+  }
 
 }

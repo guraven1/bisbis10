@@ -31,21 +31,22 @@ Bisbis10 follows the principles of Representational State Transfer (REST), a sof
 
 ### HATEOAS in MyProject
 
-MyProject embraces the HATEOAS principle by embedding hyperlinks in API responses. When clients interact with resources (e.g., restaurants), they receive responses that not only contain the requested data but also include hyperlinks to related resources and actions.
+Bisbis10 embraces the HATEOAS principle by embedding hyperlinks in API responses. When clients interact with resources (e.g., restaurants), they receive responses that not only contain the requested data but also include hyperlinks to related resources and actions.
 
 For example, when fetching details of a restaurant, the response includes hyperlinks to view all dishes of that restaurant, place an order, or rate the restaurant. This allows clients to navigate the application seamlessly without having prior knowledge of the API endpoints.
 
 By leveraging HATEOAS, MyProject provides a self-descriptive API that promotes discoverability, decoupling, and flexibility.
 
-## Out of Scope
-
-- **Payment Processing**: Payment processing functionality is out of scope for this project.
-- **User Authentication**: User authentication and authorization features are not included in this version of the application.
-- **Advanced Analytics**: Advanced analytics features such as predictive analytics or business intelligence are not implemented.
-
 ## Future Development
 
-- **User Authentication**: Implement user authentication and authorization to secure the application and provide personalized experiences.
+- **User Interface**: Create a User Interface.
+- **User Management and Authentication**: Implement user management, authentication and authorization to secure the application and provide personalized experiences.
+- **Expand Entity Functionality**: Save pictures for the dishes, more data on the restaurants such as verbal reviews.
 - **Enhanced Reporting**: Introduce reporting features to analyze restaurant performance, dish popularity, and customer behavior.
+- **Map and Delivery**: Restaurant location and distance from user.
 - **Integration with External Services**: Integrate with external services for features like online ordering, delivery tracking, or online reservations.
 - **Mobile Application**: Develop a mobile application to complement the web application and provide access to users on-the-go.
+
+## Styling
+
+Bisbis10 embraces the Google Checks styling standards.

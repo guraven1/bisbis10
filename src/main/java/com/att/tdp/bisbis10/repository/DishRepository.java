@@ -2,9 +2,8 @@ package com.att.tdp.bisbis10.repository;
 
 import com.att.tdp.bisbis10.entity.Dish;
 import com.att.tdp.bisbis10.entity.Restaurant;
-import org.springframework.data.jpa.repository.JpaRepository;
-
 import java.util.List;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
  * Repository interface for managing Dish entities.
@@ -12,11 +11,11 @@ import java.util.List;
  */
 public interface DishRepository extends JpaRepository<Dish, Long> {
 
-    /**
-     * Retrieves a list of dishes by restaurant.
-     *
-     * @param restaurant the restaurant for which to retrieve dishes
-     * @return a list of dishes belonging to the specified restaurant
-     */
-    List<Dish> findByRestaurant(final Restaurant restaurant);
+  /**
+   * Retrieves a list of dishes by restaurant.
+   *
+   * @param restaurant the restaurant for which to retrieve dishes
+   * @return a list of dishes belonging to the specified restaurant
+   */
+  List<Dish> findByRestaurant(final Restaurant restaurant);
 }

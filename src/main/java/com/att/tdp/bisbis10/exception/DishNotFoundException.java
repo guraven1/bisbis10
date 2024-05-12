@@ -5,12 +5,12 @@ package com.att.tdp.bisbis10.exception;
  */
 public class DishNotFoundException extends RuntimeException {
 
-    /**
-     * Constructs a new DishNotFoundException with the given ID.
-     *
-     * @param id the ID of the dish that was not found
-     */
-    public DishNotFoundException(Long id) {
-        super("Dish not found with ID: " + id);
-    }
+  /**
+   * Constructs a new DishNotFoundException with the given ID.
+   *
+   * @param id the ID of the dish that was not found
+   */
+  public DishNotFoundException(Long id) {
+    super("Dish not found with ID: " + id);
+  }
 }

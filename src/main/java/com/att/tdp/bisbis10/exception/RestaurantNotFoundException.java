@@ -5,12 +5,12 @@ package com.att.tdp.bisbis10.exception;
  */
 public class RestaurantNotFoundException extends RuntimeException {
 
-    /**
-     * Constructs a new RestaurantNotFoundException with the specified ID.
-     *
-     * @param id the ID of the restaurant that was not found
-     */
-    public RestaurantNotFoundException(final Long id) {
-        super("Restaurant not found with ID: " + id);
-    }
+  /**
+   * Constructs a new RestaurantNotFoundException with the specified ID.
+   *
+   * @param id the ID of the restaurant that was not found
+   */
+  public RestaurantNotFoundException(final Long id) {
+    super("Restaurant not found with ID: " + id);
+  }
 }

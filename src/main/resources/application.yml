@@ -11,10 +11,10 @@ spring:
     driverClassName: org.postgresql.Driver
     platform: postgres
   jpa:
-    database: POSTGRESQL
     show-sql: true
     hibernate:
       ddl-auto: update
+    open-in-view: true
   sql:
     init:
       mode: always

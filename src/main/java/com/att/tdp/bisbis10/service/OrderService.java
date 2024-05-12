@@ -11,27 +11,27 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class OrderService {
-    @Autowired
-    private OrderRepository orderRepository;
+  @Autowired
+  private OrderRepository orderRepository;
 
-    /**
-     * Places a new order.
-     *
-     * @param bisOrder The new order to place.
-     */
-    public void placeOrder(final BisOrder bisOrder) {
-        orderRepository.save(bisOrder);
-    }
+  /**
+   * Places a new order.
+   *
+   * @param bisOrder The new order to place.
+   */
+  public void placeOrder(final BisOrder bisOrder) {
+    orderRepository.save(bisOrder);
+  }
 
-    /**
-     * Retrieves an order by its ID.
-     *
-     * @param orderId The ID of the order to retrieve.
-     * @return The order if found.
-     * @throws OrderNotFoundException if the order with the specified ID is not found.
-     */
-    public BisOrder getOrderById(final String orderId) throws OrderNotFoundException {
-        return orderRepository.findById(orderId).orElseThrow(() -> new OrderNotFoundException(orderId));
-    }
-
+  /**
+   * Retrieves an order by its ID.
+   *
+   * @param orderId The ID of the order to retrieve.
+   * @return The order if found.
+   * @throws OrderNotFoundException if the order with the specified ID is not found.
+   */
+  public BisOrder getOrderById(final String orderId) throws OrderNotFoundException {
+    return orderRepository.findById(orderId)
+          .orElseThrow(() -> new OrderNotFoundException(orderId));
+  }
 }

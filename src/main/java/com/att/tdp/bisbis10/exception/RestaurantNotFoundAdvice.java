@@ -14,16 +14,17 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ControllerAdvice
 public class RestaurantNotFoundAdvice {
 
-    /**
-     * Handles RestaurantNotFoundException and returns a custom message with HTTP status code 404 (NOT_FOUND).
-     *
-     * @param ex the exception instance of {@link RestaurantNotFoundException} to handle
-     * @return a custom error message indicating the restaurant was not found
-     */
-    @ResponseBody
-    @ExceptionHandler(RestaurantNotFoundException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    final String restaurantNotFoundHandler(final RestaurantNotFoundException ex) {
-        return ex.getMessage();
-    }
+  /**
+   * Handles RestaurantNotFoundException and returns
+   * a custom message with HTTP status code 404 (NOT_FOUND).
+   *
+   * @param ex the exception instance of {@link RestaurantNotFoundException} to handle
+   * @return a custom error message indicating the restaurant was not found
+   */
+  @ResponseBody
+  @ExceptionHandler(RestaurantNotFoundException.class)
+  @ResponseStatus(HttpStatus.NOT_FOUND)
+  final String restaurantNotFoundHandler(final RestaurantNotFoundException ex) {
+    return ex.getMessage();
+  }
 }

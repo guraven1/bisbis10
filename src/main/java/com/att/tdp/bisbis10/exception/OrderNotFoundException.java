@@ -5,12 +5,12 @@ package com.att.tdp.bisbis10.exception;
  */
 public class OrderNotFoundException extends RuntimeException {
 
-    /**
-     * Constructs a new OrderNotFoundException with the specified ID.
-     *
-     * @param id the ID of the order that was not found
-     */
-    public OrderNotFoundException(final String id) {
-        super("Order not found with ID: " + id);
-    }
+  /**
+   * Constructs a new OrderNotFoundException with the specified ID.
+   *
+   * @param id the ID of the order that was not found
+   */
+  public OrderNotFoundException(final String id) {
+    super("Order not found with ID: " + id);
+  }
 }

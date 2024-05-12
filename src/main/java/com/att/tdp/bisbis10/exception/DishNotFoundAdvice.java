@@ -12,17 +12,17 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ControllerAdvice
 public class DishNotFoundAdvice {
 
-    /**
-     * Handles the DishNotFoundException by returning a response body with the exception message
-     * and setting the HTTP status code to 404 (NOT_FOUND).
-     *
-     * @param ex the DishNotFoundException to handle
-     * @return a response body containing the exception message
-     */
-    @ResponseBody
-    @ExceptionHandler(DishNotFoundException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    final String dishNotFoundHandler(final DishNotFoundException ex) {
-        return ex.getMessage();
-    }
+  /**
+   * Handles the DishNotFoundException by returning a response body with the exception message
+   * and setting the HTTP status code to 404 (NOT_FOUND).
+   *
+   * @param ex the DishNotFoundException to handle
+   * @return a response body containing the exception message
+   */
+  @ResponseBody
+  @ExceptionHandler(DishNotFoundException.class)
+  @ResponseStatus(HttpStatus.NOT_FOUND)
+  final String dishNotFoundHandler(final DishNotFoundException ex) {
+    return ex.getMessage();
+  }
 }

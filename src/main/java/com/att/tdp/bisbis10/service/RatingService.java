@@ -13,24 +13,24 @@ import org.springframework.stereotype.Service;
 @Service
 public class RatingService {
 
-    @Autowired
-    private RatingRepository ratingRepository;
+  @Autowired
+  private RatingRepository ratingRepository;
 
-    @Autowired
-    private RestaurantService restaurantService;
+  @Autowired
+  private RestaurantService restaurantService;
 
-    /**
-     * Adds a rating for a restaurant.
-     *
-     * @param rating          The new rating of the restaurant to post.
-     * @param restaurant the restaurant that the rating is for.
-     */
-    @Transactional
-    public void addRating(final Rating rating, final Restaurant restaurant) {
-        rating.setRestaurant(restaurant);
-        ratingRepository.save(rating);
-        Long restaurantId = rating.getRestaurantId();
-        Double newAverageRating = ratingRepository.calculateAverageRatingByRestaurantId(restaurantId);
-        restaurantService.updateAverageRating(restaurantId, newAverageRating);
-    }
+  /**
+   * Adds a rating for a restaurant.
+   *
+   * @param rating          The new rating of the restaurant to post.
+   * @param restaurant the restaurant that the rating is for.
+   */
+  @Transactional
+  public void addRating(final Rating rating, final Restaurant restaurant) {
+    rating.setRestaurant(restaurant);
+    ratingRepository.save(rating);
+    Long restaurantId = rating.getRestaurantId();
+    Double newAverageRating = ratingRepository.calculateAverageRatingByRestaurantId(restaurantId);
+    restaurantService.updateAverageRating(restaurantId, newAverageRating);
+  }
 }
