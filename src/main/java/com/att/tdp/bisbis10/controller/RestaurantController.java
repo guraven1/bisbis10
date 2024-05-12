@@ -93,16 +93,15 @@ public class RestaurantController {
   * @return ResponseEntity containing the added restaurant entity
   */
   @PostMapping
-  public ResponseEntity<EntityModel<Restaurant>>
+  public ResponseEntity<String>
       addRestaurant(@Valid @RequestBody final Restaurant restaurant,
                     final BindingResult bindingResult) {
     validator.validate(restaurant, bindingResult);
     if (bindingResult.hasErrors()) {
-      return ResponseEntity.badRequest().build();
+      return ResponseEntity.badRequest().body("Validation failed: " + bindingResult.getAllErrors());
     }
     restaurantService.addRestaurant(restaurant);
-    EntityModel<Restaurant> restaurantModel = assembler.toModel(restaurant);
-    return new ResponseEntity<>(restaurantModel, HttpStatus.CREATED);
+    return new ResponseEntity<>(HttpStatus.CREATED);
   }
 
   /**
@@ -115,7 +114,7 @@ public class RestaurantController {
   * @throws RestaurantNotFoundException if the restaurant with the given ID is not found
   */
   @PutMapping("/{id}")
-  public ResponseEntity<EntityModel<Restaurant>>
+  public ResponseEntity<String>
       updateRestaurant(@PathVariable final Long id,
                        @Valid @RequestBody final Restaurant restaurant,
              final BindingResult bindingResult)
@@ -123,14 +122,12 @@ public class RestaurantController {
     validator.validateCuisines(restaurant, bindingResult);
 
     if (bindingResult.hasErrors()) {
-      return ResponseEntity.badRequest().build();
+      return ResponseEntity.badRequest().body("Validation failed: " + bindingResult.getAllErrors());
     }
 
     restaurantService.updateRestaurant(id, restaurant);
 
-    EntityModel<Restaurant> restaurantModel = assembler
-          .toModel(restaurantService.getRestaurantById(id));
-    return new ResponseEntity<>(restaurantModel, HttpStatus.OK);
+    return new ResponseEntity<>(HttpStatus.OK);
   }
 
   /**

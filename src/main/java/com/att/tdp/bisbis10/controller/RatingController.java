@@ -40,17 +40,15 @@ public class RatingController {
     the success of the operation or any validation errors
    */
   @PostMapping("/ratings")
-  public ResponseEntity<EntityModel<Restaurant>>
+  public ResponseEntity<String>
         addRating(@Valid @RequestBody final Rating ratingData,
                                                              final BindingResult bindingResult)
             throws RestaurantNotFoundException {
     validator.validate(ratingData, bindingResult);
     if (bindingResult.hasErrors()) {
-      return ResponseEntity.badRequest().build();
+      return ResponseEntity.badRequest().body("Validation failed: " + bindingResult.getAllErrors());
     }
     Restaurant restaurant = restaurantService.getRestaurantById(ratingData.getRestaurantId());
     ratingService.addRating(ratingData, restaurant);
-    EntityModel<Restaurant> restaurantModel = assembler.toModel(restaurant);
-    return new ResponseEntity<>(restaurantModel, HttpStatus.OK);
-  }
+    return new ResponseEntity<>(HttpStatus.OK);  }
 }

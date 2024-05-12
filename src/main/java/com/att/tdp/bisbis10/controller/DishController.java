@@ -64,17 +64,16 @@ public class DishController {
    * @throws RestaurantNotFoundException if the restaurant with the given ID is not found
    */
   @PostMapping
-  public ResponseEntity<EntityModel<Dish>> addDish(@PathVariable("id") final Long restaurantId,
+  public ResponseEntity<String> addDish(@PathVariable("id") final Long restaurantId,
                                              @Valid @RequestBody final Dish dish,
                                              final BindingResult bindingResult)
         throws RestaurantNotFoundException {
     validator.validate(dish, bindingResult);
     if (bindingResult.hasErrors()) {
-      return ResponseEntity.badRequest().build();
+      return ResponseEntity.badRequest().body("Validation failed: " + bindingResult.getAllErrors());
     }
     dishService.addDish(restaurantId, dish);
-    EntityModel<Dish> dishModel = assembler.toModel(dish);
-    return new ResponseEntity<>(dishModel, HttpStatus.CREATED);
+    return new ResponseEntity<>(HttpStatus.CREATED);
   }
 
   /**
@@ -89,18 +88,17 @@ public class DishController {
    * @throws DishNotFoundException      if the dish with the given ID is not found
    */
   @PutMapping("/{dishId}")
-  public ResponseEntity<EntityModel<Dish>> updateDish(@PathVariable("id") final Long restaurantId,
+  public ResponseEntity<String> updateDish(@PathVariable("id") final Long restaurantId,
                                               @PathVariable final Long dishId,
                                               @Valid @RequestBody final Dish dish,
                                                       final BindingResult bindingResult)
           throws RestaurantNotFoundException, DishNotFoundException {
     validator.validateUpdate(dish, bindingResult);
     if (bindingResult.hasErrors()) {
-      return ResponseEntity.badRequest().build();
+      return ResponseEntity.badRequest().body("Validation failed: " + bindingResult.getAllErrors());
     }
     dishService.updateDish(dishId, dish);
-    EntityModel<Dish> dishModel = assembler.toModel(dishService.getDishById(dishId));
-    return new ResponseEntity<>(dishModel, HttpStatus.OK);
+    return new ResponseEntity<>(HttpStatus.OK);
   }
 
   /**
