@@ -1,47 +1,39 @@
 package com.att.tdp.bisbis10.assembler;
 
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
-
-import com.att.tdp.bisbis10.controller.DishController;
+import com.att.tdp.bisbis10.DTO.BisOrderDTO;
 import com.att.tdp.bisbis10.controller.OrderController;
 import com.att.tdp.bisbis10.controller.RestaurantController;
-import com.att.tdp.bisbis10.entity.BisOrder;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.RepresentationModelAssembler;
 import org.springframework.stereotype.Component;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 /**
  * Assembler class for converting BisOrder entities into EntityModel instances with HATEOAS links.
  */
 @Component
-public class OrderModelAssembler implements RepresentationModelAssembler<BisOrder,
-        EntityModel<BisOrder>> {
+public class OrderModelAssembler implements RepresentationModelAssembler<BisOrderDTO,
+        EntityModel<BisOrderDTO>> {
 
   /**
    * Converts a BisOrder entity into an EntityModel with self and additional links.
    *
-   * @param bisOrder the BisOrder entity to be converted
+   * @param bisOrderDTO the bisOrderDTO entity to be converted
    * @return EntityModel representing the BisOrder with associated links
    */
-  public EntityModel<BisOrder> toModel(final BisOrder bisOrder) {
+  public EntityModel<BisOrderDTO> toModel(final BisOrderDTO bisOrderDTO) {
 
     // Unconditional links to single-item resource and aggregate root
 
-    return EntityModel.of(bisOrder, //
-            linkTo(methodOn(OrderController.class).cancelOrderForm(bisOrder
+    return EntityModel.of(bisOrderDTO, //
+            linkTo(methodOn(OrderController.class).cancelOrderForm(bisOrderDTO
                     .getOrderId()))
                     .withRel("Cancel Order"),
-            linkTo(methodOn(RestaurantController.class).getRestaurantById(bisOrder
-                    .getRestaurantId()))
-                    .withRel("Back To Restaurant"),
-            linkTo(methodOn(DishController.class).getDishesByRestaurant(bisOrder
-                    .getRestaurantId()))
-                    .withRel("Restaurant's Menu"),
-            linkTo(methodOn(RestaurantController.class).rateRestaurantForm(bisOrder
-                    .getRestaurantId()))
-                    .withRel("Rate The Restaurant"),
-            linkTo(methodOn(OrderController.class).getOrderById(bisOrder.getOrderId()))
+            linkTo(methodOn(RestaurantController.class).getAllRestaurants())
+                    .withRel("All Restaurants"),
+            linkTo(methodOn(OrderController.class).getOrderById(bisOrderDTO.getOrderId()))
                     .withSelfRel());
   }
 }

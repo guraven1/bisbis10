@@ -1,5 +1,6 @@
 package com.att.tdp.bisbis10.controller;
 
+import com.att.tdp.bisbis10.DTO.BisOrderDTO;
 import com.att.tdp.bisbis10.assembler.OrderModelAssembler;
 import com.att.tdp.bisbis10.entity.BisOrder;
 import com.att.tdp.bisbis10.entity.Dish;
@@ -15,6 +16,8 @@ import com.att.tdp.bisbis10.service.RestaurantService;
 import com.att.tdp.bisbis10.validators.BisOrderValidator;
 import com.att.tdp.bisbis10.validators.OrderItemValidator;
 import javax.validation.Valid;
+
+import org.aspectj.weaver.ast.Or;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
@@ -71,8 +74,8 @@ public class OrderController {
   * @return ResponseEntity containing the placed order or any validation errors
   */
   @PostMapping
-  public ResponseEntity<Object> placeOrder(@Valid @RequestBody BisOrder bisOrder,
-                                             BindingResult bindingResult)
+  public ResponseEntity<EntityModel<BisOrderDTO>> placeOrder(@Valid @RequestBody BisOrder bisOrder,
+                                                            BindingResult bindingResult)
           throws RestaurantNotFoundException, DishNotFoundException {
     validator.validate(bisOrder, bindingResult);
     Restaurant restaurant = restaurantService.getRestaurantById(bisOrder.getRestaurantId());
@@ -83,16 +86,18 @@ public class OrderController {
         Dish dish = dishService.getDishById(orderItem.getDishId());
         if (bindingResult.hasErrors()) {
           return ResponseEntity.badRequest()
-                .body("Validation failed: " + bindingResult.getAllErrors());
+                .build();
         }
       }
     }
     if (bindingResult.hasErrors()) {
       return ResponseEntity.badRequest()
-            .body("Validation failed: " + bindingResult.getAllErrors());
+            .build();
     }
     orderService.placeOrder(bisOrder);
-    EntityModel<BisOrder> orderModel = assembler.toModel(bisOrder);
+    BisOrderDTO orderDTO = new BisOrderDTO();
+    orderDTO.setOrderId(bisOrder.getOrderId());
+    EntityModel<BisOrderDTO> orderModel = assembler.toModel(orderDTO);
 
     return new ResponseEntity<>(orderModel, HttpStatus.OK);
   }
@@ -117,10 +122,12 @@ public class OrderController {
    * @throws OrderNotFoundException if the order with the specified ID is not found
    */
   @GetMapping("/{id}")
-  public ResponseEntity<EntityModel<BisOrder>>
+  public ResponseEntity<EntityModel<BisOrderDTO>>
         getOrderById(@PathVariable String id) throws OrderNotFoundException {
     BisOrder order = orderService.getOrderById(id);
-    EntityModel<BisOrder> orderModel = assembler.toModel(order);
-    return ResponseEntity.ok(orderModel);
+    BisOrderDTO orderDTO = new BisOrderDTO();
+    orderDTO.setOrderId(order.getOrderId());
+    EntityModel<BisOrderDTO> orderModel = assembler.toModel(orderDTO);
+    return new ResponseEntity<>(orderModel, HttpStatus.OK);
   }
 }
