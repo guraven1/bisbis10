@@ -25,11 +25,15 @@ public class RestaurantController {
 
     @Autowired
     private RestaurantService restaurantService;
+    // Service for handling restaurant-related business logic
+
     @Autowired
     private RestaurantValidator validator;
+    // Validator for validating restaurant data
 
     @Autowired
     private RestaurantModelAssembler assembler;
+    // Assembler for creating HATEOAS-compliant representations of restaurant entities
 
     /**
      * Retrieves all restaurants.
@@ -81,7 +85,7 @@ public class RestaurantController {
      */
     @PostMapping
     public ResponseEntity<EntityModel<Restaurant>> addRestaurant
-            (@Valid @RequestBody final Restaurant restaurant, BindingResult bindingResult) {
+            (@Valid @RequestBody final Restaurant restaurant, final BindingResult bindingResult) {
         validator.validate(restaurant, bindingResult);
         if (bindingResult.hasErrors()) {
             return ResponseEntity.badRequest().build();
@@ -101,8 +105,9 @@ public class RestaurantController {
      * @throws RestaurantNotFoundException if the restaurant with the given ID is not found
      */
     @PutMapping("/{id}")
-    public ResponseEntity<EntityModel<Restaurant>> updateRestaurant
-            (@PathVariable final Long id, @Valid @RequestBody final Restaurant restaurant, BindingResult bindingResult)
+    public ResponseEntity<EntityModel<Restaurant>> updateRestaurant(@PathVariable final Long id,
+                                                                    @Valid @RequestBody final Restaurant restaurant,
+             final BindingResult bindingResult)
             throws RestaurantNotFoundException {
 
         validator.validateCuisines(restaurant, bindingResult);

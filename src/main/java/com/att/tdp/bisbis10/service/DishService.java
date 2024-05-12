@@ -11,6 +11,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * Service class for managing dishes.
+ */
 @Service
 public class DishService {
     @Autowired

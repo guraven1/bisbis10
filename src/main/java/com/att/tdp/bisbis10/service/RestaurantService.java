@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Service class that provides methods to perform CRUD operations on restaurants.
@@ -23,7 +22,7 @@ public class RestaurantService {
      *
      * @return List of all restaurants.
      */
-    public List<Restaurant> getAllRestaurants(){
+    public List<Restaurant> getAllRestaurants() {
         return restaurantRepository.findAll();
     }
 
@@ -33,7 +32,7 @@ public class RestaurantService {
      * @param cuisine The cuisine that the restaurants returned have.
      * @return a list of restaurants with the specified cuisine.
      */
-    public List<Restaurant> getRestaurantsByCuisine(final String cuisine){
+    public List<Restaurant> getRestaurantsByCuisine(final String cuisine) {
         return restaurantRepository.findByCuisinesContaining(cuisine);
     }
 
@@ -44,7 +43,7 @@ public class RestaurantService {
      * @return The restaurant with the specified ID.
      * @throws RestaurantNotFoundException if the restaurant with the specified ID is not found.
      */
-    public Restaurant getRestaurantById(Long id) throws RestaurantNotFoundException {
+    public Restaurant getRestaurantById(final Long id) throws RestaurantNotFoundException {
         return restaurantRepository.findById(id)
                 .orElseThrow(() -> new RestaurantNotFoundException(id));
     }
@@ -80,10 +79,10 @@ public class RestaurantService {
      * @param newAverageRating The updated rating.
      * @throws RestaurantNotFoundException if the restaurant with the specified ID is not found.
      */
-    public void updateAverageRating(Long id, double newAverageRating) throws
+    public void updateAverageRating(final Long id, final double newAverageRating) throws
             RestaurantNotFoundException {
         Restaurant existingRestaurant = restaurantRepository.findById(id)
-                .orElseThrow(() -> new RestaurantNotFoundException(id));;
+                .orElseThrow(() -> new RestaurantNotFoundException(id));
         existingRestaurant.setAverageRating(newAverageRating);
         restaurantRepository.save(existingRestaurant);
         }

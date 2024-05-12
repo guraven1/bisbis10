@@ -10,7 +10,7 @@ public class RestaurantNotFoundException extends RuntimeException {
      *
      * @param id the ID of the restaurant that was not found
      */
-    public RestaurantNotFoundException(Long id) {
+    public RestaurantNotFoundException(final Long id) {
         super("Restaurant not found with ID: " + id);
     }
 }

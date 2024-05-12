@@ -42,7 +42,7 @@ public class RatingController {
      */
     @PostMapping("/ratings")
     public ResponseEntity<EntityModel<Restaurant>> addRating(@Valid @RequestBody final Rating ratingData,
-                                                             BindingResult bindingResult)
+                                                             final BindingResult bindingResult)
             throws RestaurantNotFoundException {
 
         validator.validate(ratingData, bindingResult);

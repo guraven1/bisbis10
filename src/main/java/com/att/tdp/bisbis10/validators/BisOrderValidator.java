@@ -1,6 +1,7 @@
 package com.att.tdp.bisbis10.validators;
 
-import com.att.tdp.bisbis10.entity.*;
+import com.att.tdp.bisbis10.entity.BisOrder;
+import com.att.tdp.bisbis10.entity.OrderItem;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
@@ -38,7 +39,7 @@ public class BisOrderValidator implements Validator {
                     "restaurantId.empty", "RestaurantId must not be empty");
         }
         List<OrderItem> itemList = bisOrder.getOrderItems();
-        if (itemList == null || itemList.isEmpty()){
+        if (itemList == null || itemList.isEmpty()) {
             errors.rejectValue("orderItems",
                     "orderItems.empty", "orderItems must not be empty");
         }

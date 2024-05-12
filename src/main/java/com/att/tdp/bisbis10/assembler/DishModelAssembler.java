@@ -11,9 +11,18 @@ import org.springframework.stereotype.Component;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
+/**
+ * Assembler class for converting Dish entities into EntityModel instances with HATEOAS links.
+ */
 @Component
 public class DishModelAssembler implements RepresentationModelAssembler<Dish, EntityModel<Dish>> {
 
+    /**
+     * Converts a Dish entity into an EntityModel with self and additional links.
+     *
+     * @param dish the Dish entity to be converted
+     * @return EntityModel representing the Dish with associated links
+     */
     @Override
     public EntityModel<Dish> toModel(final Dish dish) {
 

@@ -2,15 +2,12 @@ package com.att.tdp.bisbis10.controller;
 
 import com.att.tdp.bisbis10.assembler.DishModelAssembler;
 import com.att.tdp.bisbis10.entity.Dish;
-import com.att.tdp.bisbis10.entity.Restaurant;
 import com.att.tdp.bisbis10.exception.DishNotFoundException;
 import com.att.tdp.bisbis10.exception.RestaurantNotFoundException;
-import com.att.tdp.bisbis10.repository.DishRepository;
 import com.att.tdp.bisbis10.service.DishService;
 import com.att.tdp.bisbis10.service.RestaurantService;
 import com.att.tdp.bisbis10.validators.DishValidator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -39,11 +36,15 @@ public class DishController {
         this.dishService = dishService;
     }
     @Autowired
-    public RestaurantService restaurantService;
+    private RestaurantService restaurantService;
+    // Service for handling restaurant-related business logic
     @Autowired
     private DishValidator validator;
+    // Validator for validating dish data
+
     @Autowired
     private DishModelAssembler assembler;
+    // Assembler for creating HATEOAS-compliant representations of dish entities
 
     /**
      * Adds a dish to the specified restaurant.
@@ -57,7 +58,7 @@ public class DishController {
     @PostMapping
     public ResponseEntity<EntityModel<Dish>> addDish(@PathVariable("id") final Long restaurantId,
                                              @Valid @RequestBody final Dish dish,
-                                             BindingResult bindingResult) throws RestaurantNotFoundException {
+                                             final BindingResult bindingResult) throws RestaurantNotFoundException {
         validator.validate(dish, bindingResult);
         if (bindingResult.hasErrors()) {
             return ResponseEntity.badRequest().build();
@@ -81,7 +82,8 @@ public class DishController {
     @PutMapping("/{dishId}")
     public ResponseEntity<EntityModel<Dish>> updateDish(@PathVariable("id") final Long restaurantId,
                                                 @PathVariable final Long dishId,
-                                                @Valid @RequestBody Dish dish, BindingResult bindingResult)
+                                                @Valid @RequestBody final Dish dish,
+                                                        final BindingResult bindingResult)
             throws RestaurantNotFoundException, DishNotFoundException {
         validator.validateUpdate(dish, bindingResult);
         if (bindingResult.hasErrors()) {
@@ -114,8 +116,7 @@ public class DishController {
      * @throws RestaurantNotFoundException if the restaurant with the given ID is not found
      */
     @GetMapping
-    public ResponseEntity<List<Dish>> getDishesByRestaurant
-            (@PathVariable("id") final Long restaurantId)
+    public ResponseEntity<List<Dish>> getDishesByRestaurant(@PathVariable("id") final Long restaurantId)
      throws RestaurantNotFoundException {
         List<Dish> dishes = dishService.getDishesByRestaurant(restaurantId);
         return new ResponseEntity<>(dishes, HttpStatus.OK);

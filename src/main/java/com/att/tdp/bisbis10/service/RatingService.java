@@ -1,13 +1,15 @@
 package com.att.tdp.bisbis10.service;
 
-import com.att.tdp.bisbis10.exception.RestaurantNotFoundException;
-import com.att.tdp.bisbis10.repository.RatingRepository;
 import com.att.tdp.bisbis10.entity.Rating;
 import com.att.tdp.bisbis10.entity.Restaurant;
+import com.att.tdp.bisbis10.repository.RatingRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+/**
+ * Service class for managing ratings.
+ */
 @Service
 public class RatingService {
 

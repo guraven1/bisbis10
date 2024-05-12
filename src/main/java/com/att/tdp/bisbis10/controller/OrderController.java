@@ -45,16 +45,27 @@ public class OrderController {
     }
     @Autowired
     private RestaurantService restaurantService;
+    // Service for handling restaurant-related business logic
+
     @Autowired
     private DishService dishService;
+    // Service for handling dish-related business logic
+
     @Autowired
     private DishRepository dishRepository;
+    // Repository for accessing dish data
+
     @Autowired
     private BisOrderValidator validator;
+    // Validator for validating order data
+
     @Autowired
     private OrderItemValidator itemValidator;
+    // Validator for validating order item data
+
     @Autowired
     private OrderModelAssembler assembler;
+    // Assembler for creating HATEOAS-compliant representations of order entities
 
     /**
      * Places an order.
@@ -90,12 +101,25 @@ public class OrderController {
         return new ResponseEntity<>(orderModel, HttpStatus.OK);
     }
 
+    /**
+     * Generates a cancel order form (Not Implemented!).
+     *
+     * @param id the ID of the order for which the form is generated
+     * @return ResponseEntity indicating the status of the operation
+     */
     @GetMapping("/{id}/cancelOrder")
     public ResponseEntity<Void> cancelOrderForm(@PathVariable final String id) {
         // Return a link to the canceling form
         return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
     }
 
+    /**
+     * Retrieves the order with the specified ID.
+     *
+     * @param id the ID of the order to retrieve
+     * @return ResponseEntity containing the order with associated links
+     * @throws OrderNotFoundException if the order with the specified ID is not found
+     */
     @GetMapping("/{id}")
     public ResponseEntity<EntityModel<BisOrder>> getOrderById(@PathVariable String id) throws OrderNotFoundException {
             BisOrder order = orderService.getOrderById(id);

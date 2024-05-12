@@ -1,13 +1,14 @@
 package com.att.tdp.bisbis10.service;
 
 import com.att.tdp.bisbis10.entity.BisOrder;
-import com.att.tdp.bisbis10.exception.DishNotFoundException;
 import com.att.tdp.bisbis10.exception.OrderNotFoundException;
-import com.att.tdp.bisbis10.exception.RestaurantNotFoundException;
 import com.att.tdp.bisbis10.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+/**
+ * Service class for managing orders.
+ */
 @Service
 public class OrderService {
     @Autowired
@@ -29,7 +30,7 @@ public class OrderService {
      * @return The order if found.
      * @throws OrderNotFoundException if the order with the specified ID is not found.
      */
-    public BisOrder getOrderById(String orderId) throws OrderNotFoundException {
+    public BisOrder getOrderById(final String orderId) throws OrderNotFoundException {
         return orderRepository.findById(orderId).orElseThrow(() -> new OrderNotFoundException(orderId));
     }
 

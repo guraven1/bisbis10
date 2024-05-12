@@ -11,9 +11,18 @@ import org.springframework.stereotype.Component;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
+/**
+ * Assembler class for converting BisOrder entities into EntityModel instances with HATEOAS links.
+ */
 @Component
 public class OrderModelAssembler implements RepresentationModelAssembler<BisOrder, EntityModel<BisOrder>> {
 
+    /**
+     * Converts a BisOrder entity into an EntityModel with self and additional links.
+     *
+     * @param bisOrder the BisOrder entity to be converted
+     * @return EntityModel representing the BisOrder with associated links
+     */
     public EntityModel<BisOrder> toModel(final BisOrder bisOrder) {
 
         // Unconditional links to single-item resource and aggregate root
