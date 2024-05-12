@@ -55,16 +55,16 @@ public class DishController {
      * @throws RestaurantNotFoundException if the restaurant with the given ID is not found
      */
     @PostMapping
-    public ResponseEntity<Dish> addDish(@PathVariable("id") final Long restaurantId,
-                                          @Valid @RequestBody final Dish dish,
-                                          BindingResult bindingResult) throws RestaurantNotFoundException{
+    public ResponseEntity<EntityModel<Dish>> addDish(@PathVariable("id") final Long restaurantId,
+                                             @Valid @RequestBody final Dish dish,
+                                             BindingResult bindingResult) throws RestaurantNotFoundException {
         validator.validate(dish, bindingResult);
         if (bindingResult.hasErrors()) {
             return ResponseEntity.badRequest().build();
         }
-        Restaurant restaurant = restaurantService.getRestaurantById(restaurantId);
         dishService.addDish(restaurantId, dish);
-        return new ResponseEntity<>(dish, HttpStatus.CREATED);
+        EntityModel<Dish> dishModel = assembler.toModel(dish);
+        return new ResponseEntity<>(dishModel, HttpStatus.CREATED);
     }
 
     /**
@@ -79,16 +79,17 @@ public class DishController {
      * @throws DishNotFoundException      if the dish with the given ID is not found
      */
     @PutMapping("/{dishId}")
-    public ResponseEntity<Dish> updateDish(@PathVariable("id") final Long restaurantId,
-                                             @PathVariable final Long dishId,
-                                             @Valid @RequestBody Dish dish, BindingResult bindingResult)
+    public ResponseEntity<EntityModel<Dish>> updateDish(@PathVariable("id") final Long restaurantId,
+                                                @PathVariable final Long dishId,
+                                                @Valid @RequestBody Dish dish, BindingResult bindingResult)
             throws RestaurantNotFoundException, DishNotFoundException {
         validator.validateUpdate(dish, bindingResult);
         if (bindingResult.hasErrors()) {
             return ResponseEntity.badRequest().build();
         }
         dishService.updateDish(dishId, dish);
-        return new ResponseEntity<>(dish, HttpStatus.OK);
+        EntityModel<Dish> dishModel = assembler.toModel(dish);
+        return new ResponseEntity<>(dishModel, HttpStatus.OK);
     }
 
     /**

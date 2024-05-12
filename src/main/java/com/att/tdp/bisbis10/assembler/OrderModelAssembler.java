@@ -20,13 +20,13 @@ public class OrderModelAssembler implements RepresentationModelAssembler<BisOrde
 
         return EntityModel.of(bisOrder, //
                 linkTo(methodOn(OrderController.class).cancelOrderForm(bisOrder.getOrderId()))
-                        .withRel("cancelOrder"),
+                        .withRel("Cancel Order"),
                 linkTo(methodOn(RestaurantController.class).getRestaurantById(bisOrder.getRestaurantId()))
-                        .withRel("restaurant"),
+                        .withRel("Back To Restaurant"),
                 linkTo(methodOn(DishController.class).getDishesByRestaurant(bisOrder.getRestaurantId()))
-                        .withRel("restaurantDishes"),
+                        .withRel("Restaurant's Menu"),
                 linkTo(methodOn(RestaurantController.class).rateRestaurantForm(bisOrder.getRestaurantId()))
-                        .withRel("rateRestaurant"),
+                        .withRel("Rate The Restaurant"),
                 linkTo(methodOn(OrderController.class).getOrderById(bisOrder.getOrderId())).withSelfRel());
     }
 }

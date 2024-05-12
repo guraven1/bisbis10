@@ -29,9 +29,13 @@ public class RestaurantModelAssembler implements RepresentationModelAssembler<Re
 
         return EntityModel.of(restaurant, //
                 linkTo(methodOn(RestaurantController.class).getRestaurantById(restaurant.getId())).withSelfRel(),
-                linkTo(methodOn(RestaurantController.class).getAllRestaurants()).withRel("restaurants"),
-                linkTo(methodOn(DishController.class).getDishesByRestaurant(restaurant.getId())).withRel("dishes"),
-                linkTo(methodOn(RestaurantController.class).placeOrderForm(restaurant.getId())).withRel("placeOrder"),
-                linkTo(methodOn(RestaurantController.class).rateRestaurantForm(restaurant.getId())).withRel("rateRestaurant"));
+                linkTo(methodOn(RestaurantController.class).getAllRestaurants())
+                        .withRel("All Restaurants"),
+                linkTo(methodOn(DishController.class).getDishesByRestaurant(restaurant.getId()))
+                        .withRel("Dishes"),
+                linkTo(methodOn(RestaurantController.class).placeOrderForm(restaurant.getId()))
+                        .withRel("Place An Order"),
+                linkTo(methodOn(RestaurantController.class).rateRestaurantForm(restaurant.getId()))
+                        .withRel("Rate The Restaurant"));
     }
 }

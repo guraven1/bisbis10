@@ -19,13 +19,13 @@ public class DishModelAssembler implements RepresentationModelAssembler<Dish, En
 
         return EntityModel.of(dish, //
                 linkTo(methodOn(RestaurantController.class).getRestaurantById(dish.getRestaurant().
-                        getId())).withRel("restaurant"),
+                        getId())).withRel("Back To Restaurant"),
                 linkTo(methodOn(DishController.class).
                         getDish(dish.getRestaurant().getId(), dish.getId())).withSelfRel(),
-                linkTo(methodOn(RestaurantController.class).getAllRestaurants()).withRel("restaurants"),
+                linkTo(methodOn(RestaurantController.class).getAllRestaurants()).withRel("All Restaurants"),
                 linkTo(methodOn(RestaurantController.class).placeOrderForm(dish.getRestaurant().
-                        getId())).withRel("placeOrderForm"),
+                        getId())).withRel("Place An Order"),
                 linkTo(methodOn(RestaurantController.class).rateRestaurantForm(dish.getRestaurant().
-                        getId())).withRel("rateRestaurantForm"));
+                        getId())).withRel("Rate The Restaurant"));
     }
 }

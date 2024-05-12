@@ -1,11 +1,14 @@
 package com.att.tdp.bisbis10.controller;
 
+import com.att.tdp.bisbis10.assembler.RestaurantModelAssembler;
 import com.att.tdp.bisbis10.entity.Rating;
 import com.att.tdp.bisbis10.entity.Restaurant;
+import com.att.tdp.bisbis10.exception.RestaurantNotFoundException;
 import com.att.tdp.bisbis10.service.RatingService;
 import com.att.tdp.bisbis10.service.RestaurantService;
 import com.att.tdp.bisbis10.validators.RatingValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -27,6 +30,8 @@ public class RatingController {
     private RestaurantService restaurantService;
     @Autowired
     private RatingValidator validator;
+    @Autowired
+    private RestaurantModelAssembler assembler;
 
     /**
      * Adds a new rating for a restaurant.
@@ -36,17 +41,17 @@ public class RatingController {
      * @return ResponseEntity containing a message indicating the success of the operation or any validation errors
      */
     @PostMapping("/ratings")
-    public ResponseEntity<String> addRating(@Valid @RequestBody final Rating ratingData, BindingResult bindingResult) {
+    public ResponseEntity<EntityModel<Restaurant>> addRating(@Valid @RequestBody final Rating ratingData,
+                                                             BindingResult bindingResult)
+            throws RestaurantNotFoundException {
 
         validator.validate(ratingData, bindingResult);
         if (bindingResult.hasErrors()) {
-            return ResponseEntity.badRequest().body("Validation failed: " + bindingResult.getAllErrors());
+            return ResponseEntity.badRequest().build();
         }
         Restaurant restaurant = restaurantService.getRestaurantById(ratingData.getRestaurantId());
-        if (restaurant == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Restaurant not found");
-        }
         ratingService.addRating(ratingData, restaurant);
-        return new ResponseEntity<>(HttpStatus.OK);
+        EntityModel<Restaurant> restaurantModel = assembler.toModel(restaurant);
+        return new ResponseEntity<>(restaurantModel, HttpStatus.OK);
     }
 }
