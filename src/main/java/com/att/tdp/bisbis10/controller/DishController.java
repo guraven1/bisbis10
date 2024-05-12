@@ -88,7 +88,7 @@ public class DishController {
             return ResponseEntity.badRequest().build();
         }
         dishService.updateDish(dishId, dish);
-        EntityModel<Dish> dishModel = assembler.toModel(dish);
+        EntityModel<Dish> dishModel = assembler.toModel(dishService.getDishById(dishId));
         return new ResponseEntity<>(dishModel, HttpStatus.OK);
     }
 
