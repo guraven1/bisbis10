@@ -33,7 +33,7 @@ public class BisOrderValidator implements Validator {
   @Override
   public void validate(final Object obj, final Errors errors) {
     BisOrder bisOrder = (BisOrder) obj;
-    if (bisOrder.getRestaurant() == null) {
+    if (bisOrder.getRestaurantId() == null) {
       errors.rejectValue("restaurantId",
                 "restaurantId.empty", "RestaurantId must not be empty");
     }

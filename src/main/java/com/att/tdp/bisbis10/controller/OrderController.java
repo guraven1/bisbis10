@@ -71,7 +71,7 @@ public class OrderController {
   * @return ResponseEntity containing the placed order or any validation errors
   */
   @PostMapping
-  public ResponseEntity<Object> placeOrder(@Valid @RequestBody final BisOrder bisOrder,
+  public ResponseEntity<Object> placeOrder(@Valid @RequestBody BisOrder bisOrder,
                                              BindingResult bindingResult)
           throws RestaurantNotFoundException, DishNotFoundException {
     validator.validate(bisOrder, bindingResult);

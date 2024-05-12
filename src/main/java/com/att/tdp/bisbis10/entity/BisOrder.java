@@ -16,13 +16,12 @@ import org.hibernate.annotations.UuidGenerator;
  * Entity class representing an order in the restaurant.
  */
 @Entity
-public final class BisOrder {
+public class BisOrder {
   @Id
   @UuidGenerator
   private String orderId;
   private Long restaurantId;
-  @OneToMany(mappedBy = "bisOrder", cascade = CascadeType.ALL, orphanRemoval = true)
-  @JsonManagedReference
+  @OneToMany(fetch = FetchType.LAZY, mappedBy = "bisOrder", cascade = CascadeType.ALL)
   private List<OrderItem> orderItems;
 
   @ManyToOne(fetch = FetchType.LAZY)
@@ -42,7 +41,7 @@ public final class BisOrder {
    * @param restaurantId the ID of the restaurant associated with the order
    * @param orderItems   the list of order items
    */
-  public BisOrder(final Long restaurantId, final List<OrderItem> orderItems) {
+  public BisOrder(Long restaurantId, final List<OrderItem> orderItems) {
     super();
     this.orderId = UUID.randomUUID().toString();
     this.restaurantId = restaurantId;

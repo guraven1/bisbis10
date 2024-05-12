@@ -33,13 +33,13 @@ public class OrderModelAssembler implements RepresentationModelAssembler<BisOrde
                     .getOrderId()))
                     .withRel("Cancel Order"),
             linkTo(methodOn(RestaurantController.class).getRestaurantById(bisOrder
-                    .getRestaurant().getId()))
+                    .getRestaurantId()))
                     .withRel("Back To Restaurant"),
             linkTo(methodOn(DishController.class).getDishesByRestaurant(bisOrder
-                    .getRestaurant().getId()))
+                    .getRestaurantId()))
                     .withRel("Restaurant's Menu"),
             linkTo(methodOn(RestaurantController.class).rateRestaurantForm(bisOrder
-                    .getRestaurant().getId()))
+                    .getRestaurantId()))
                     .withRel("Rate The Restaurant"),
             linkTo(methodOn(OrderController.class).getOrderById(bisOrder.getOrderId()))
                     .withSelfRel());

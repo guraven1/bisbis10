@@ -19,7 +19,7 @@ public class OrderService {
    *
    * @param bisOrder The new order to place.
    */
-  public void placeOrder(final BisOrder bisOrder) {
+  public void placeOrder(BisOrder bisOrder) {
     orderRepository.save(bisOrder);
   }
 
