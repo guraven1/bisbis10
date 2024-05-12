@@ -1,14 +1,15 @@
 package com.att.tdp.bisbis10.service;
 
-import com.att.tdp.bisbis10.repository.DishRepository;
 import com.att.tdp.bisbis10.entity.Dish;
 import com.att.tdp.bisbis10.entity.Restaurant;
+import com.att.tdp.bisbis10.exception.DishNotFoundException;
+import com.att.tdp.bisbis10.exception.RestaurantNotFoundException;
+import com.att.tdp.bisbis10.repository.DishRepository;
 import com.att.tdp.bisbis10.repository.RestaurantRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class DishService {
@@ -16,30 +17,54 @@ public class DishService {
     private DishRepository dishRepository;
     @Autowired
     private RestaurantRepository restaurantRepository;
+
+    /**
+     * Adds a dish to a restaurant.
+     *
+     * @param dish the new dish.
+     * @param restaurantId the id of the restaurant.
+     * @throws RestaurantNotFoundException if the restaurant with the specified ID is not found.
+     */
     public void addDish(final Long restaurantId, final Dish dish) {
-        Optional<Restaurant> parentRestaurant = restaurantRepository.findById(restaurantId);
-        if (parentRestaurant.isPresent()){
-            dish.setRestaurant(parentRestaurant.get());
-            this.dishRepository.save(dish);
-        }
+        Restaurant restaurant = restaurantRepository.findById(restaurantId)
+                .orElseThrow(() -> new RestaurantNotFoundException(restaurantId));
+        dish.setRestaurant(restaurant);
+        this.dishRepository.save(dish);
     }
 
-    public void updateDish(final Long dishId, final Dish changed_dish) {
-        Optional<Dish> optionalDish = dishRepository.findById(dishId);
-        if (optionalDish.isPresent()) {
-            Dish dish = optionalDish.get();
-            dish.setDescription(changed_dish.getDescription());
-            dish.setPrice(changed_dish.getPrice());
-            dishRepository.save(dish);
-        }
+    /**
+     * Update a dish by ID.
+     *
+     * @param newDish the new dish.
+     * @param dishId the id of the original dish.
+     * @throws RestaurantNotFoundException if the restaurant with the specified ID is not found.
+     */
+    public void updateDish(final Long dishId, final Dish newDish) throws DishNotFoundException {
+        Dish oldDish = dishRepository.findById(dishId)
+                .orElseThrow(() -> new DishNotFoundException(dishId));
+        oldDish.setDescription(newDish.getDescription());
+        oldDish.setPrice(newDish.getPrice());
+        dishRepository.save(oldDish);
     }
 
-    public void deleteDish(final Long restaurantId, final Long dishId) {
+    /**
+     * Deletes a dish by ID.
+     *
+     * @param dishId the id of the dish to delete.
+     */
+    public void deleteDish(final Long dishId) {
         dishRepository.deleteById(dishId);
     }
 
-    public List<Dish> getDishesByRestaurant(final Long restaurantId) {
-        Optional<Restaurant> restaurant = restaurantRepository.findById(restaurantId);
-        return restaurant.map(value -> dishRepository.findByRestaurant(value)).orElse(null);
+    /**
+     * Retrieves all dishes from a restaurant.
+     *
+     * @param restaurantId the restaurant's id.
+     * @return a list of dishes.
+     */
+    public List<Dish> getDishesByRestaurant(final Long restaurantId) throws RestaurantNotFoundException {
+        Restaurant restaurant = restaurantRepository.findById(restaurantId)
+                .orElseThrow(() -> new RestaurantNotFoundException(restaurantId));
+        return dishRepository.findByRestaurant(restaurant);
     }
 }

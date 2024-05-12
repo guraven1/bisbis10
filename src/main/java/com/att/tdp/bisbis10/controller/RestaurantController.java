@@ -16,6 +16,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 
+/**
+ * Controller class for handling restaurant-related operations.
+ */
 @RestController
 @RequestMapping("/restaurants")
 public class RestaurantController {
@@ -28,6 +31,11 @@ public class RestaurantController {
     @Autowired
     private RestaurantModelAssembler assembler;
 
+    /**
+     * Retrieves all restaurants.
+     *
+     * @return ResponseEntity containing a collection of restaurant entities
+     */
     @GetMapping
     public ResponseEntity<CollectionModel<EntityModel<Restaurant>>> getAllRestaurants() {
         List<Restaurant> restaurants = restaurantService.getAllRestaurants();
@@ -35,6 +43,12 @@ public class RestaurantController {
         return new ResponseEntity<>(restaurantModels, HttpStatus.OK);
     }
 
+    /**
+     * Retrieves restaurants by cuisine.
+     *
+     * @param cuisine the cuisine to filter by
+     * @return ResponseEntity containing a collection of restaurant entities
+     */
     @GetMapping(params = "cuisine")
     public ResponseEntity<CollectionModel<EntityModel<Restaurant>>> getRestaurantsByCuisine
             (@RequestParam final String cuisine) {
@@ -43,6 +57,13 @@ public class RestaurantController {
         return new ResponseEntity<>(restaurantModels, HttpStatus.OK);
     }
 
+    /**
+     * Retrieves a restaurant by its ID.
+     *
+     * @param id the ID of the restaurant to retrieve
+     * @return ResponseEntity containing the restaurant entity
+     * @throws RestaurantNotFoundException if the restaurant with the given ID is not found
+     */
     @GetMapping("/{id}")
     public ResponseEntity<EntityModel<Restaurant>> getRestaurantById(@PathVariable final Long id)
             throws RestaurantNotFoundException {
@@ -51,6 +72,13 @@ public class RestaurantController {
         return new ResponseEntity<>(restaurantModel, HttpStatus.OK);
     }
 
+    /**
+     * Adds a new restaurant.
+     *
+     * @param restaurant    the restaurant to add
+     * @param bindingResult the result of the validation
+     * @return ResponseEntity containing the added restaurant entity
+     */
     @PostMapping
     public ResponseEntity<EntityModel<Restaurant>> addRestaurant
             (@Valid @RequestBody final Restaurant restaurant, BindingResult bindingResult) {
@@ -63,6 +91,15 @@ public class RestaurantController {
         return new ResponseEntity<>(restaurantModel, HttpStatus.CREATED);
     }
 
+    /**
+     * Updates an existing restaurant.
+     *
+     * @param id             the ID of the restaurant to update
+     * @param restaurant     the updated restaurant information
+     * @param bindingResult the result of the validation
+     * @return ResponseEntity containing the updated restaurant entity
+     * @throws RestaurantNotFoundException if the restaurant with the given ID is not found
+     */
     @PutMapping("/{id}")
     public ResponseEntity<EntityModel<Restaurant>> updateRestaurant
             (@PathVariable final Long id, @Valid @RequestBody final Restaurant restaurant, BindingResult bindingResult)
@@ -80,6 +117,12 @@ public class RestaurantController {
         return new ResponseEntity<>(restaurantModel, HttpStatus.OK);
     }
 
+    /**
+     * Deletes a restaurant.
+     *
+     * @param id the ID of the restaurant to delete
+     * @return ResponseEntity indicating the success of the deletion operation
+     */
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteRestaurant(@PathVariable final Long id) {
 

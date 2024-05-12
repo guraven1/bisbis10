@@ -59,7 +59,7 @@ public class RestaurantService {
     }
 
     /**
-     * Updates an existing restaurant.
+     * Updates the cuisines in an existing restaurant.
      *
      * @param id          The ID of the restaurant to update.
      * @param newRestaurant The updated restaurant data.
@@ -73,6 +73,13 @@ public class RestaurantService {
         restaurantRepository.save(existingRestaurant);
     }
 
+    /**
+     * Updates the average rating in an existing restaurant (used when posting new ratings).
+     *
+     * @param id          The ID of the restaurant to update.
+     * @param newAverageRating The updated rating.
+     * @throws RestaurantNotFoundException if the restaurant with the specified ID is not found.
+     */
     public void updateAverageRating(Long id, double newAverageRating) throws
             RestaurantNotFoundException {
         Restaurant existingRestaurant = restaurantRepository.findById(id)
@@ -81,6 +88,11 @@ public class RestaurantService {
         restaurantRepository.save(existingRestaurant);
         }
 
+    /**
+     * Deletes a restaurant.
+     *
+     * @param id          The ID of the restaurant to delete.
+     */
     public void deleteRestaurant(final Long id) {
         restaurantRepository.deleteById(id);
     }

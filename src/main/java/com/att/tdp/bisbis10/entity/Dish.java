@@ -3,6 +3,9 @@ package com.att.tdp.bisbis10.entity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
+/**
+ * Entity class representing a dish.
+ */
 @Entity
 public class Dish {
     @Id
@@ -16,10 +19,20 @@ public class Dish {
     private String description;
     private int price;
 
+    /**
+     * Default constructor.
+     */
     public Dish(){
         super();
     }
 
+    /**
+     * Parameterized constructor to initialize a dish.
+     *
+     * @param name the name of the dish
+     * @param description the description of the dish
+     * @param price the price of the dish
+     */
     public Dish(final String name, final String description, final int price){
         this.name = name;
         this.description = description;

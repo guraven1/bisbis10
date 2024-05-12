@@ -1,11 +1,17 @@
 package com.att.tdp.bisbis10.controller;
 
+import com.att.tdp.bisbis10.assembler.DishModelAssembler;
 import com.att.tdp.bisbis10.entity.Dish;
+import com.att.tdp.bisbis10.entity.Restaurant;
+import com.att.tdp.bisbis10.exception.DishNotFoundException;
+import com.att.tdp.bisbis10.exception.RestaurantNotFoundException;
 import com.att.tdp.bisbis10.repository.DishRepository;
 import com.att.tdp.bisbis10.service.DishService;
 import com.att.tdp.bisbis10.service.RestaurantService;
 import com.att.tdp.bisbis10.validators.DishValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -14,72 +20,102 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 
+/**
+ * Controller class for handling dish-related operations.
+ */
 @RestController
 @RequestMapping("/restaurants/{id}/dishes")
 public class DishController {
 
     private final DishService dishService;
 
+    /**
+     * Constructs a new DishController with the given DishService.
+     *
+     * @param dishService the dish service to be used
+     */
     @Autowired
     public DishController(DishService dishService) {
         this.dishService = dishService;
     }
-
-    @Autowired
-    private DishRepository dishRepository;
     @Autowired
     public RestaurantService restaurantService;
     @Autowired
     private DishValidator validator;
+    @Autowired
+    private DishModelAssembler assembler;
 
+    /**
+     * Adds a dish to the specified restaurant.
+     *
+     * @param restaurantId  the ID of the restaurant to which the dish belongs
+     * @param dish          the dish data to be added
+     * @param bindingResult the result of the validation
+     * @return ResponseEntity containing the added dish or any validation errors
+     * @throws RestaurantNotFoundException if the restaurant with the given ID is not found
+     */
     @PostMapping
-    public ResponseEntity<String> addDish(@PathVariable("id") final Long restaurantId,
+    public ResponseEntity<Dish> addDish(@PathVariable("id") final Long restaurantId,
                                           @Valid @RequestBody final Dish dish,
-                                          BindingResult bindingResult) {
+                                          BindingResult bindingResult) throws RestaurantNotFoundException{
         validator.validate(dish, bindingResult);
         if (bindingResult.hasErrors()) {
-            return ResponseEntity.badRequest().body("Validation failed: " + bindingResult.getAllErrors());
+            return ResponseEntity.badRequest().build();
         }
-        if (restaurantService.getRestaurantById(restaurantId) == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Restaurant not found");
-        }
+        Restaurant restaurant = restaurantService.getRestaurantById(restaurantId);
         dishService.addDish(restaurantId, dish);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        return new ResponseEntity<>(dish, HttpStatus.CREATED);
     }
 
+    /**
+     * Updates a dish of the specified restaurant.
+     *
+     * @param restaurantId  the ID of the restaurant to which the dish belongs
+     * @param dishId        the ID of the dish to be updated
+     * @param dish          the dish data to be updated
+     * @param bindingResult the result of the validation
+     * @return ResponseEntity containing the updated dish or any validation errors
+     * @throws RestaurantNotFoundException if the restaurant with the given ID is not found
+     * @throws DishNotFoundException      if the dish with the given ID is not found
+     */
     @PutMapping("/{dishId}")
-    public ResponseEntity<String> updateDish(@PathVariable("id") final Long restaurantId,
+    public ResponseEntity<Dish> updateDish(@PathVariable("id") final Long restaurantId,
                                              @PathVariable final Long dishId,
-                                             @Valid @RequestBody Dish dish, BindingResult bindingResult) {
+                                             @Valid @RequestBody Dish dish, BindingResult bindingResult)
+            throws RestaurantNotFoundException, DishNotFoundException {
         validator.validateUpdate(dish, bindingResult);
         if (bindingResult.hasErrors()) {
-            return ResponseEntity.badRequest().body("Validation failed: " + bindingResult.getAllErrors());
-        }
-        if (restaurantService.getRestaurantById(restaurantId) == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Restaurant not found");
-        }
-        if (dishRepository.findById(dishId).isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Dish not found");
+            return ResponseEntity.badRequest().build();
         }
         dishService.updateDish(dishId, dish);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(dish, HttpStatus.OK);
     }
 
+    /**
+     * Deletes a dish from the specified restaurant.
+     *
+     * @param restaurantId the ID of the restaurant from which the dish will be deleted
+     * @param dishId       the ID of the dish to be deleted
+     * @return ResponseEntity indicating the success of the deletion
+     */
     @DeleteMapping("/{dishId}")
     public ResponseEntity<String> deleteDish(@PathVariable("id") final Long restaurantId,
                                              @PathVariable final Long dishId) {
-        if (restaurantService.getRestaurantById(restaurantId) == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Restaurant not found");
-        }
-        if (dishRepository.findById(dishId).isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Dish not found");
-        }
-        dishService.deleteDish(restaurantId, dishId);
+        dishService.deleteDish(dishId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
+    /**
+     * Retrieves all dishes belonging to the specified restaurant.
+     *
+     * @param restaurantId the ID of the restaurant
+     * @return ResponseEntity containing the list of dishes or an error if the restaurant is not found
+     * @throws RestaurantNotFoundException if the restaurant with the given ID is not found
+     */
     @GetMapping
-    public ResponseEntity<List<Dish>> getDishesByRestaurant(@PathVariable("id") final Long restaurantId) {
+    public ResponseEntity<List<Dish>> getDishesByRestaurant
+            (@PathVariable("id") final Long restaurantId)
+     throws RestaurantNotFoundException {
         List<Dish> dishes = dishService.getDishesByRestaurant(restaurantId);
         return new ResponseEntity<>(dishes, HttpStatus.OK);
     }

@@ -15,6 +15,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 
+/**
+ * Controller class for handling rating-related operations.
+ */
 @RestController
 public class RatingController {
 
@@ -25,6 +28,13 @@ public class RatingController {
     @Autowired
     private RatingValidator validator;
 
+    /**
+     * Adds a new rating for a restaurant.
+     *
+     * @param ratingData    the rating data to add
+     * @param bindingResult the result of the validation
+     * @return ResponseEntity containing a message indicating the success of the operation or any validation errors
+     */
     @PostMapping("/ratings")
     public ResponseEntity<String> addRating(@Valid @RequestBody final Rating ratingData, BindingResult bindingResult) {
 

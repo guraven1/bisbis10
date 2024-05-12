@@ -21,10 +21,19 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.Optional;
 
+/**
+ * Controller class for handling order-related operations.
+ */
 @RestController
 @RequestMapping("/order")
 public class OrderController {
     private final OrderService orderService;
+
+    /**
+     * Constructs a new OrderController with the given OrderService.
+     *
+     * @param orderService the order service to be used
+     */
     @Autowired
     public OrderController(final OrderService orderService) {
         this.orderService = orderService;
@@ -41,6 +50,14 @@ public class OrderController {
     private OrderItemValidator itemValidator;
     @Autowired
     private OrderModelAssembler assembler;
+
+    /**
+     * Places an order.
+     *
+     * @param bisOrder      the order data to be placed
+     * @param bindingResult the result of the validation
+     * @return ResponseEntity containing the placed order or any validation errors
+     */
     @PostMapping
     public ResponseEntity<Object> placeOrder(@Valid @RequestBody final BisOrder bisOrder, BindingResult bindingResult) {
         validator.validate(bisOrder, bindingResult);

@@ -7,6 +7,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
+/**
+ * Entity class representing a restaurant.
+ */
 @Entity
 public class Restaurant {
     @Id
@@ -30,9 +33,23 @@ public class Restaurant {
     @JsonManagedReference
     @JsonIgnore
     private List<BisOrder> bisOrders;
+
+    /**
+     * Default constructor.
+     */
     public Restaurant() {
         super();
     }
+
+    /**
+     * Parameterized constructor to initialize a restaurant.
+     *
+     * @param id            the ID of the restaurant
+     * @param name          the name of the restaurant
+     * @param averageRating the average rating of the restaurant
+     * @param isKosher      whether the restaurant is kosher
+     * @param cuisines      the cuisines served by the restaurant
+     */
     public Restaurant(final Long id, final String name, final Double averageRating, final Boolean isKosher,
                       final List<String> cuisines) {
         super();
@@ -56,17 +73,15 @@ public class Restaurant {
         return Double.parseDouble(df.format(averageRating));
     }
 
-    public void setAverageRating(final Double averageRating){this.averageRating = averageRating;}
+    public void setAverageRating(final Double averageRating){ this.averageRating = averageRating; }
 
-    public boolean getIsKosher(){return this.isKosher;}
+    public void setIsKosher(final boolean isKosher){ this.isKosher = isKosher; }
 
-    public void setIsKosher(final boolean isKosher){this.isKosher = isKosher;}
+    public boolean getIsKosher(){ return this.isKosher; }
 
-    public List<String> getCuisines(){return cuisines;}
+    public List<String> getCuisines(){ return cuisines;}
 
-    public void setCuisines(final List<String> cuisines){this.cuisines = cuisines;}
+    public void setCuisines(final List<String> cuisines){ this.cuisines = cuisines; }
 
-    public List<Dish> getDishes(){return dishes;}
-
-    public void setDishes(final List<Dish> dishes){this.dishes = dishes;}
+    public List<Dish> getDishes(){ return dishes; }
 }

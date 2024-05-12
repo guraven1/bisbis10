@@ -8,10 +8,18 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.RepresentationModelAssembler;
 import org.springframework.stereotype.Component;
 
-
+/**
+ * Assembler class for converting Restaurant entities into EntityModel instances with HATEOAS links.
+ */
 @Component
 public class RestaurantModelAssembler implements RepresentationModelAssembler<Restaurant, EntityModel<Restaurant>> {
 
+    /**
+     * Converts a Restaurant entity into an EntityModel with self and collection links.
+     *
+     * @param restaurant the Restaurant entity to be converted
+     * @return EntityModel representing the Restaurant with associated links
+     */
     @Override
     public EntityModel<Restaurant> toModel(final Restaurant restaurant) {
 
