@@ -79,7 +79,7 @@ public class RestaurantController {
   *
   * @param restaurant    the restaurant to add
   * @param bindingResult the result of the validation
-  * @return ResponseEntity containing the added restaurant entity
+  * @return ResponseEntity containing created status
   */
   @PostMapping
   public ResponseEntity<String>
@@ -99,7 +99,7 @@ public class RestaurantController {
   * @param id             the ID of the restaurant to update
   * @param restaurant     the updated restaurant information
   * @param bindingResult the result of the validation
-  * @return ResponseEntity containing the updated restaurant entity
+  * @return ResponseEntity containing the OK status
   * @throws RestaurantNotFoundException if the restaurant with the given ID is not found
   */
   @PutMapping("/{id}")
@@ -129,29 +129,5 @@ public class RestaurantController {
   public ResponseEntity<Void> deleteRestaurant(@PathVariable final Long id) {
     restaurantService.deleteRestaurant(id);
     return ResponseEntity.noContent().build();
-  }
-
-  /**
-  * Provides a form for placing an order for a restaurant.
-  *
-  * @param id the ID of the restaurant
-  * @return ResponseEntity containing a link to the order placement form
-  */
-  @GetMapping("/{id}/placeOrder")
-  public ResponseEntity<Void> placeOrderForm(@PathVariable final Long id) {
-    // Return a link to the order placement form
-    return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
-  }
-
-  /**
-  * Provides a form for rating a restaurant.
-  *
-  * @param id the ID of the restaurant
-  * @return ResponseEntity containing a link to the rating form
-  */
-  @GetMapping("/{id}/rateRestaurant")
-  public ResponseEntity<Void> rateRestaurantForm(@PathVariable final Long id) {
-    // Return a link to the rating form
-    return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
   }
 }

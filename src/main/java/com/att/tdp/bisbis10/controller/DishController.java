@@ -9,7 +9,6 @@ import com.att.tdp.bisbis10.validator.DishValidator;
 import java.util.List;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -21,6 +20,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
 
 /**
  * Controller class for handling dish-related operations.
@@ -78,7 +78,7 @@ public class DishController {
    * @param dishId        the ID of the dish to be updated
    * @param dish          the dish data to be updated
    * @param bindingResult the result of the validation
-   * @return ResponseEntity containing the updated dish or any validation errors
+   * @return ResponseEntity containing status or any validation errors
    * @throws RestaurantNotFoundException if the restaurant with the given ID is not found
    * @throws DishNotFoundException      if the dish with the given ID is not found
    */
