@@ -1,5 +1,6 @@
 package com.att.tdp.bisbis10.service;
 
+import com.att.tdp.bisbis10.projection.RestaurantProjection;
 import com.att.tdp.bisbis10.entity.Restaurant;
 import com.att.tdp.bisbis10.exception.RestaurantNotFoundException;
 import com.att.tdp.bisbis10.repository.RestaurantRepository;
@@ -21,8 +22,8 @@ public class RestaurantService {
    *
    * @return List of all restaurants.
    */
-  public List<Restaurant> getAllRestaurants() {
-    return restaurantRepository.findAll();
+  public List<RestaurantProjection> getAllRestaurants() {
+    return restaurantRepository.findAllProjectedBy();
   }
 
   /**
@@ -31,7 +32,7 @@ public class RestaurantService {
    * @param cuisine The cuisine that the restaurants returned have.
    * @return a list of restaurants with the specified cuisine.
    */
-  public List<Restaurant> getRestaurantsByCuisine(final String cuisine) {
+  public List<RestaurantProjection> getRestaurantsByCuisine(final String cuisine) {
     return restaurantRepository.findByCuisinesContaining(cuisine);
   }
 

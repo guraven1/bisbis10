@@ -13,11 +13,10 @@ import com.att.tdp.bisbis10.repository.DishRepository;
 import com.att.tdp.bisbis10.service.DishService;
 import com.att.tdp.bisbis10.service.OrderService;
 import com.att.tdp.bisbis10.service.RestaurantService;
-import com.att.tdp.bisbis10.validators.BisOrderValidator;
-import com.att.tdp.bisbis10.validators.OrderItemValidator;
+import com.att.tdp.bisbis10.validator.BisOrderValidator;
+import com.att.tdp.bisbis10.validator.OrderItemValidator;
 import javax.validation.Valid;
 
-import org.aspectj.weaver.ast.Or;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
@@ -74,7 +73,7 @@ public class OrderController {
   * @return ResponseEntity containing the placed order or any validation errors
   */
   @PostMapping
-  public ResponseEntity<EntityModel<BisOrderDTO>> placeOrder(@Valid @RequestBody BisOrder bisOrder,
+  public ResponseEntity<BisOrderDTO> placeOrder(@Valid @RequestBody BisOrder bisOrder,
                                                             BindingResult bindingResult)
           throws RestaurantNotFoundException, DishNotFoundException {
     validator.validate(bisOrder, bindingResult);
@@ -97,9 +96,7 @@ public class OrderController {
     orderService.placeOrder(bisOrder);
     BisOrderDTO orderDTO = new BisOrderDTO();
     orderDTO.setOrderId(bisOrder.getOrderId());
-    EntityModel<BisOrderDTO> orderModel = assembler.toModel(orderDTO);
-
-    return new ResponseEntity<>(orderModel, HttpStatus.OK);
+    return new ResponseEntity<>(orderDTO, HttpStatus.OK);
   }
 
   /**
@@ -122,12 +119,12 @@ public class OrderController {
    * @throws OrderNotFoundException if the order with the specified ID is not found
    */
   @GetMapping("/{id}")
-  public ResponseEntity<EntityModel<BisOrderDTO>>
+  public ResponseEntity<BisOrderDTO>
         getOrderById(@PathVariable String id) throws OrderNotFoundException {
     BisOrder order = orderService.getOrderById(id);
     BisOrderDTO orderDTO = new BisOrderDTO();
     orderDTO.setOrderId(order.getOrderId());
     EntityModel<BisOrderDTO> orderModel = assembler.toModel(orderDTO);
-    return new ResponseEntity<>(orderModel, HttpStatus.OK);
+    return new ResponseEntity<>(orderDTO, HttpStatus.OK);
   }
 }

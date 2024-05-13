@@ -1,17 +1,15 @@
-package com.att.tdp.bisbis10.validators;
+package com.att.tdp.bisbis10.validator;
 
-import com.att.tdp.bisbis10.entity.BisOrder;
-import com.att.tdp.bisbis10.entity.OrderItem;
-import java.util.List;
+import com.att.tdp.bisbis10.entity.Rating;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
 /**
- * Validator class for validating BisOrder objects.
+ * Validator class for validating Rating objects.
  */
 @Component
-public class BisOrderValidator implements Validator {
+public class RatingValidator implements Validator {
 
   /**
    * Determines whether the validator supports the given class.
@@ -21,7 +19,7 @@ public class BisOrderValidator implements Validator {
    */
   @Override
   public boolean supports(final Class<?> clazz) {
-    return BisOrder.class.equals(clazz);
+    return Rating.class.equals(clazz);
   }
 
   /**
@@ -32,15 +30,15 @@ public class BisOrderValidator implements Validator {
    */
   @Override
   public void validate(final Object obj, final Errors errors) {
-    BisOrder bisOrder = (BisOrder) obj;
-    if (bisOrder.getRestaurantId() == null) {
+    Rating rating = (Rating) obj;
+    if (rating.getRestaurantId() == null) {
       errors.rejectValue("restaurantId",
                 "restaurantId.empty", "RestaurantId must not be empty");
     }
-    List<OrderItem> itemList = bisOrder.getOrderItems();
-    if (itemList == null || itemList.isEmpty()) {
-      errors.rejectValue("orderItems",
-                "orderItems.empty", "orderItems must not be empty");
+    Double ratingNumber = rating.getRating();
+    if (ratingNumber == null || ratingNumber < 0 || ratingNumber > 5) {
+      errors.rejectValue("rating",
+                "rating.invalid", "Rating must be a number ranging from 1 to 5");
     }
   }
 }

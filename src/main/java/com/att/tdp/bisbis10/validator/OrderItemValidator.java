@@ -1,15 +1,15 @@
-package com.att.tdp.bisbis10.validators;
+package com.att.tdp.bisbis10.validator;
 
-import com.att.tdp.bisbis10.entity.Rating;
+import com.att.tdp.bisbis10.entity.OrderItem;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
 /**
- * Validator class for validating Rating objects.
+ * Validator class for validating OrderItem objects.
  */
 @Component
-public class RatingValidator implements Validator {
+public class OrderItemValidator implements Validator {
 
   /**
    * Determines whether the validator supports the given class.
@@ -19,7 +19,7 @@ public class RatingValidator implements Validator {
    */
   @Override
   public boolean supports(final Class<?> clazz) {
-    return Rating.class.equals(clazz);
+    return OrderItem.class.equals(clazz);
   }
 
   /**
@@ -30,15 +30,13 @@ public class RatingValidator implements Validator {
    */
   @Override
   public void validate(final Object obj, final Errors errors) {
-    Rating rating = (Rating) obj;
-    if (rating.getRestaurantId() == null) {
-      errors.rejectValue("restaurantId",
-                "restaurantId.empty", "RestaurantId must not be empty");
+    OrderItem orderItems = (OrderItem) obj;
+    if (orderItems.getDishId() == null) {
+      errors.rejectValue("dishId", "dishId.empty", "DishId must not be empty");
     }
-    Double ratingNumber = rating.getRating();
-    if (ratingNumber == null || ratingNumber < 0 || ratingNumber > 5) {
-      errors.rejectValue("rating",
-                "rating.invalid", "Rating must be a number ranging from 1 to 5");
+    if (orderItems.getAmount() <= 0) {
+      errors.rejectValue("amount",
+                "amount.invalid", "Amount must be greater than zero");
     }
   }
 }

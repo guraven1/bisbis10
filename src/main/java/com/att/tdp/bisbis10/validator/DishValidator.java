@@ -1,4 +1,4 @@
-package com.att.tdp.bisbis10.validators;
+package com.att.tdp.bisbis10.validator;
 
 import com.att.tdp.bisbis10.entity.Dish;
 import org.springframework.stereotype.Component;

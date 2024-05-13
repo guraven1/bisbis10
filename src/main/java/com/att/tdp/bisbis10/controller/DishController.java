@@ -6,7 +6,7 @@ import com.att.tdp.bisbis10.exception.DishNotFoundException;
 import com.att.tdp.bisbis10.exception.RestaurantNotFoundException;
 import com.att.tdp.bisbis10.service.DishService;
 import com.att.tdp.bisbis10.service.RestaurantService;
-import com.att.tdp.bisbis10.validators.DishValidator;
+import com.att.tdp.bisbis10.validator.DishValidator;
 import java.util.List;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;

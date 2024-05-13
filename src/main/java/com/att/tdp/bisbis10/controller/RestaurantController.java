@@ -1,15 +1,14 @@
 package com.att.tdp.bisbis10.controller;
 
+import com.att.tdp.bisbis10.projection.RestaurantProjection;
 import com.att.tdp.bisbis10.assembler.RestaurantModelAssembler;
 import com.att.tdp.bisbis10.entity.Restaurant;
 import com.att.tdp.bisbis10.exception.RestaurantNotFoundException;
 import com.att.tdp.bisbis10.service.RestaurantService;
-import com.att.tdp.bisbis10.validators.RestaurantValidator;
+import com.att.tdp.bisbis10.validator.RestaurantValidator;
 import java.util.List;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.hateoas.CollectionModel;
-import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -48,11 +47,9 @@ public class RestaurantController {
   * @return ResponseEntity containing a collection of restaurant entities
   */
   @GetMapping
-  public ResponseEntity<CollectionModel<EntityModel<Restaurant>>> getAllRestaurants() {
-    List<Restaurant> restaurants = restaurantService.getAllRestaurants();
-    CollectionModel<EntityModel<Restaurant>> restaurantModels = assembler
-          .toCollectionModel(restaurants);
-    return new ResponseEntity<>(restaurantModels, HttpStatus.OK);
+  public ResponseEntity<List<RestaurantProjection>> getAllRestaurants() {
+    List<RestaurantProjection> restaurants = restaurantService.getAllRestaurants();
+    return new ResponseEntity<>(restaurants, HttpStatus.OK);
   }
 
   /**
@@ -62,12 +59,10 @@ public class RestaurantController {
   * @return ResponseEntity containing a collection of restaurant entities
   */
   @GetMapping(params = "cuisine")
-  public ResponseEntity<CollectionModel<EntityModel<Restaurant>>>
+  public ResponseEntity<List<RestaurantProjection>>
       getRestaurantsByCuisine(@RequestParam final String cuisine) {
-    List<Restaurant> restaurants = restaurantService.getRestaurantsByCuisine(cuisine);
-    CollectionModel<EntityModel<Restaurant>> restaurantModels = assembler
-          .toCollectionModel(restaurants);
-    return new ResponseEntity<>(restaurantModels, HttpStatus.OK);
+    List<RestaurantProjection> restaurants = restaurantService.getRestaurantsByCuisine(cuisine);
+    return new ResponseEntity<>(restaurants, HttpStatus.OK);
   }
 
   /**
@@ -78,11 +73,10 @@ public class RestaurantController {
   * @throws RestaurantNotFoundException if the restaurant with the given ID is not found
   */
   @GetMapping("/{id}")
-  public ResponseEntity<EntityModel<Restaurant>> getRestaurantById(@PathVariable final Long id)
+  public ResponseEntity<Restaurant> getRestaurantById(@PathVariable final Long id)
             throws RestaurantNotFoundException {
     Restaurant restaurant = restaurantService.getRestaurantById(id);
-    EntityModel<Restaurant> restaurantModel = assembler.toModel(restaurant);
-    return new ResponseEntity<>(restaurantModel, HttpStatus.OK);
+    return new ResponseEntity<>(restaurant, HttpStatus.OK);
   }
 
   /**

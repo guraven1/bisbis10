@@ -1,15 +1,17 @@
-package com.att.tdp.bisbis10.validators;
+package com.att.tdp.bisbis10.validator;
 
+import com.att.tdp.bisbis10.entity.BisOrder;
 import com.att.tdp.bisbis10.entity.OrderItem;
+import java.util.List;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
 /**
- * Validator class for validating OrderItem objects.
+ * Validator class for validating BisOrder objects.
  */
 @Component
-public class OrderItemValidator implements Validator {
+public class BisOrderValidator implements Validator {
 
   /**
    * Determines whether the validator supports the given class.
@@ -19,7 +21,7 @@ public class OrderItemValidator implements Validator {
    */
   @Override
   public boolean supports(final Class<?> clazz) {
-    return OrderItem.class.equals(clazz);
+    return BisOrder.class.equals(clazz);
   }
 
   /**
@@ -30,13 +32,15 @@ public class OrderItemValidator implements Validator {
    */
   @Override
   public void validate(final Object obj, final Errors errors) {
-    OrderItem orderItems = (OrderItem) obj;
-    if (orderItems.getDishId() == null) {
-      errors.rejectValue("dishId", "dishId.empty", "DishId must not be empty");
+    BisOrder bisOrder = (BisOrder) obj;
+    if (bisOrder.getRestaurantId() == null) {
+      errors.rejectValue("restaurantId",
+                "restaurantId.empty", "RestaurantId must not be empty");
     }
-    if (orderItems.getAmount() <= 0) {
-      errors.rejectValue("amount",
-                "amount.invalid", "Amount must be greater than zero");
+    List<OrderItem> itemList = bisOrder.getOrderItems();
+    if (itemList == null || itemList.isEmpty()) {
+      errors.rejectValue("orderItems",
+                "orderItems.empty", "orderItems must not be empty");
     }
   }
 }
