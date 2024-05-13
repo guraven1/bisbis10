@@ -1,6 +1,5 @@
 package com.att.tdp.bisbis10.controller;
 
-import com.att.tdp.bisbis10.assembler.DishModelAssembler;
 import com.att.tdp.bisbis10.entity.Dish;
 import com.att.tdp.bisbis10.exception.DishNotFoundException;
 import com.att.tdp.bisbis10.exception.RestaurantNotFoundException;
@@ -49,10 +48,6 @@ public class DishController {
   @Autowired
   private DishValidator validator;
   // Validator for validating dish data
-
-  @Autowired
-  private DishModelAssembler assembler;
-  // Assembler for creating HATEOAS-compliant representations of dish entities
 
   /**
    * Adds a dish to the specified restaurant.
@@ -140,11 +135,10 @@ public class DishController {
    * @throws DishNotFoundException      if the dish with the given ID is not found
    */
   @GetMapping("/{dishId}")
-  public ResponseEntity<EntityModel<Dish>> getDish(@PathVariable("id") final Long restaurantId,
+  public ResponseEntity<Dish> getDish(@PathVariable("id") final Long restaurantId,
                                                    @PathVariable final Long dishId)
           throws RestaurantNotFoundException, DishNotFoundException {
     Dish dish = dishService.getDishById(dishId);
-    EntityModel<Dish> dishModel = assembler.toModel(dish);
-    return new ResponseEntity<>(dishModel, HttpStatus.OK);
+    return new ResponseEntity<>(dish, HttpStatus.OK);
   }
 }

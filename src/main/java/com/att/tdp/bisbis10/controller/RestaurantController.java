@@ -1,13 +1,10 @@
 package com.att.tdp.bisbis10.controller;
 
-import com.att.tdp.bisbis10.projection.RestaurantProjection;
-import com.att.tdp.bisbis10.assembler.RestaurantModelAssembler;
 import com.att.tdp.bisbis10.entity.Restaurant;
 import com.att.tdp.bisbis10.exception.RestaurantNotFoundException;
+import com.att.tdp.bisbis10.projection.RestaurantProjection;
 import com.att.tdp.bisbis10.service.RestaurantService;
 import com.att.tdp.bisbis10.validator.RestaurantValidator;
-import java.util.List;
-import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +18,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.validation.Valid;
+import java.util.List;
 
 /**
  * Controller class for handling restaurant-related operations.
@@ -36,10 +36,6 @@ public class RestaurantController {
   @Autowired
   private RestaurantValidator validator;
   // Validator for validating restaurant data
-
-  @Autowired
-  private RestaurantModelAssembler assembler;
-  // Assembler for creating HATEOAS-compliant representations of restaurant entities
 
   /**
   * Retrieves all restaurants.

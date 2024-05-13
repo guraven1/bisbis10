@@ -1,7 +1,6 @@
 package com.att.tdp.bisbis10.controller;
 
-import com.att.tdp.bisbis10.dto.BisOrderDTO;
-import com.att.tdp.bisbis10.assembler.OrderModelAssembler;
+import com.att.tdp.bisbis10.dto.BisOrderDto;
 import com.att.tdp.bisbis10.entity.BisOrder;
 import com.att.tdp.bisbis10.entity.Dish;
 import com.att.tdp.bisbis10.entity.OrderItem;
@@ -15,10 +14,7 @@ import com.att.tdp.bisbis10.service.OrderService;
 import com.att.tdp.bisbis10.service.RestaurantService;
 import com.att.tdp.bisbis10.validator.BisOrderValidator;
 import com.att.tdp.bisbis10.validator.OrderItemValidator;
-import javax.validation.Valid;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -28,6 +24,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.validation.Valid;
 
 /**
  * Controller class for handling order-related operations.
@@ -50,9 +48,6 @@ public class OrderController {
   @Autowired
   private OrderItemValidator itemValidator;
   // Validator for validating order data
-  @Autowired
-  private OrderModelAssembler assembler;
-  // Validator for validating order item data
 
   /**
   * Constructs a new OrderController with the given OrderService.
@@ -73,8 +68,8 @@ public class OrderController {
   * @return ResponseEntity containing the placed order or any validation errors
   */
   @PostMapping
-  public ResponseEntity<BisOrderDTO> placeOrder(@Valid @RequestBody BisOrder bisOrder,
-                                                            BindingResult bindingResult)
+  public ResponseEntity<BisOrderDto> placeOrder(@Valid @RequestBody BisOrder bisOrder,
+                                                BindingResult bindingResult)
           throws RestaurantNotFoundException, DishNotFoundException {
     validator.validate(bisOrder, bindingResult);
     Restaurant restaurant = restaurantService.getRestaurantById(bisOrder.getRestaurantId());
@@ -94,9 +89,9 @@ public class OrderController {
             .build();
     }
     orderService.placeOrder(bisOrder);
-    BisOrderDTO orderDTO = new BisOrderDTO();
-    orderDTO.setOrderId(bisOrder.getOrderId());
-    return new ResponseEntity<>(orderDTO, HttpStatus.OK);
+    BisOrderDto orderDto = new BisOrderDto();
+    orderDto.setOrderId(bisOrder.getOrderId());
+    return new ResponseEntity<>(orderDto, HttpStatus.OK);
   }
 
   /**
@@ -119,12 +114,11 @@ public class OrderController {
    * @throws OrderNotFoundException if the order with the specified ID is not found
    */
   @GetMapping("/{id}")
-  public ResponseEntity<BisOrderDTO>
+  public ResponseEntity<BisOrderDto>
         getOrderById(@PathVariable String id) throws OrderNotFoundException {
     BisOrder order = orderService.getOrderById(id);
-    BisOrderDTO orderDTO = new BisOrderDTO();
-    orderDTO.setOrderId(order.getOrderId());
-    EntityModel<BisOrderDTO> orderModel = assembler.toModel(orderDTO);
-    return new ResponseEntity<>(orderDTO, HttpStatus.OK);
+    BisOrderDto orderDto = new BisOrderDto();
+    orderDto.setOrderId(order.getOrderId());
+    return new ResponseEntity<>(orderDto, HttpStatus.OK);
   }
 }

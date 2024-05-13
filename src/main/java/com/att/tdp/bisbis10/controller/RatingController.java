@@ -1,13 +1,11 @@
 package com.att.tdp.bisbis10.controller;
 
-import com.att.tdp.bisbis10.assembler.RestaurantModelAssembler;
 import com.att.tdp.bisbis10.entity.Rating;
 import com.att.tdp.bisbis10.entity.Restaurant;
 import com.att.tdp.bisbis10.exception.RestaurantNotFoundException;
 import com.att.tdp.bisbis10.service.RatingService;
 import com.att.tdp.bisbis10.service.RestaurantService;
 import com.att.tdp.bisbis10.validator.RatingValidator;
-import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +13,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.validation.Valid;
 
 /**
  * Controller class for handling rating-related operations.
@@ -27,8 +27,6 @@ public class RatingController {
   private RestaurantService restaurantService;
   @Autowired
   private RatingValidator validator;
-  @Autowired
-  private RestaurantModelAssembler assembler;
 
   /**
    * Adds a new rating for a restaurant.
