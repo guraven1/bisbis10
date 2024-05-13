@@ -1,6 +1,6 @@
 package com.att.tdp.bisbis10.assembler;
 
-import com.att.tdp.bisbis10.DTO.BisOrderDTO;
+import com.att.tdp.bisbis10.dto.BisOrderDTO;
 import com.att.tdp.bisbis10.controller.OrderController;
 import com.att.tdp.bisbis10.controller.RestaurantController;
 import org.springframework.hateoas.EntityModel;

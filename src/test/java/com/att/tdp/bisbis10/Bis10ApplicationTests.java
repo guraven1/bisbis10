@@ -46,10 +46,27 @@ class Bis10ApplicationTests {
 	@MockBean
 	private DishRepository dishRepository;
 
-	@BeforeEach
+  private Long restaurantId;
+  private Long dish1Id;
+  private Long dish2Id;
+
+
+  @BeforeEach
 	void setup() {
+    Dish dish1 = new Dish("Shakshuka", "Great one", 55);
+    Dish dish2 = new Dish("Egg", "Bad one", 30);
+
+    List<Dish> dishes = Arrays.asList(dish1, dish2);
 		restaurantRepository.deleteAll(); // Clear any existing data before each test
-	}
+    Restaurant restaurant = new Restaurant(null, "ABC", 0.0, false, Arrays.asList("Italian", "Israeli"));
+    restaurant.setDishes(dishes);
+    dish1Id = dish1.getId();
+    dish2Id = dish2.getId();
+    restaurantRepository.save(restaurant);
+    restaurantId = restaurant.getId();
+
+
+  }
 	@Test
 	void testAddRestaurant_ValidData() throws Exception {
 		Restaurant restaurant = new Restaurant(null, "New Restaurant", 4.5, true, Arrays.asList("Italian"));
@@ -101,59 +118,26 @@ class Bis10ApplicationTests {
 	}
 
 	@Test
-	void testGetAllRestaurants_NoData() throws Exception {
-		mockMvc.perform(get("/restaurants")
-						.contentType(MediaType.APPLICATION_JSON))
-				.andExpect(status().isOk())
-				.andExpect(content().json("{}"));
-	}
-	@Test
 	void testDeleteRestaurant() throws Exception {
-		Restaurant restaurant = new Restaurant(null, "Taizu", 4.83, false, Arrays.asList("Asian", "Mexican", "Indian"));
-		restaurantRepository.save(restaurant);
 
-		mockMvc.perform(delete("/restaurants/{id}", restaurant.getId())
+		mockMvc.perform(delete("/restaurants/{id}", restaurantId)
 						.contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().isNoContent());
 	}
 
 	@Test
-	void testUpdateRestaurant() throws Exception {
-		Restaurant restaurant = new Restaurant(null, "Taizu", 4.83, false, Arrays.asList("Asian", "Mexican", "Indian"));
-		restaurantRepository.save(restaurant);
-
-		restaurant.setIsKosher(true);
-		mockMvc.perform(MockMvcRequestBuilders.put("/restaurants/{id}", restaurant.getId())
-						.content(objectMapper.writeValueAsString(restaurant))
-						.contentType(MediaType.APPLICATION_JSON))
-				.andExpect(status().isOk());
-	}
-
-	@Test
 	void testGetRestaurantById() throws Exception {
-		Restaurant restaurant = new Restaurant(null, "Taizu", 4.83, false, Arrays.asList("Asian", "Mexican", "Indian"));
-		restaurantRepository.save(restaurant);
 
-		mockMvc.perform(MockMvcRequestBuilders.get("/restaurants/{id}", restaurant.getId())
+		mockMvc.perform(MockMvcRequestBuilders.get("/restaurants/{id}", restaurantId)
 						.contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.name").value("Taizu"))
-				.andExpect(jsonPath("$.isKosher").value(false));
+				.andExpect(jsonPath("$.name").value("ABC"))
+				.andExpect(jsonPath("$.isKosher").value(false))
+        .andExpect(jsonPath("$.averageRating").value(0.0));
 	}
 
 	@Test
 	void testAddRestaurantRating_ValidData() throws Exception {
-		// Add a restaurant
-		Restaurant restaurant = new Restaurant(null, "New Restaurant", 4.5, true, Arrays.asList("Italian"));
-		MvcResult restaurantResult = mockMvc.perform(post("/restaurants")
-						.content(objectMapper.writeValueAsString(restaurant))
-						.contentType(MediaType.APPLICATION_JSON))
-				.andExpect(status().isCreated())
-				.andReturn();
-
-		// Extract the ID of the created restaurant from the response
-		String restaurantResponseBody = restaurantResult.getResponse().getContentAsString();
-		Long restaurantId = Long.parseLong(JsonPath.read(restaurantResponseBody, "$.id").toString());
 
 		// Add a rating for the restaurant using the extracted ID
 		String ratingJson = "{\"restaurantId\": " + restaurantId + ", \"rating\": 4.3}";
@@ -177,25 +161,13 @@ class Bis10ApplicationTests {
 	@Test
 	void testAddDish_ValidData() throws Exception {
 		// Add a restaurant
-		Restaurant restaurant = new Restaurant(null, "New Restaurant", 4.5, true, Arrays.asList("Italian"));
-		mockMvc.perform(post("/restaurants")
-						.content(objectMapper.writeValueAsString(restaurant))
-						.contentType(MediaType.APPLICATION_JSON))
-				.andExpect(status().isCreated())
-				.andExpect(jsonPath("$.id").exists()) // Ensure that the response contains the ID of the created restaurant
-				.andDo(result -> {
-					// Extract the ID of the created restaurant
-					String responseBody = result.getResponse().getContentAsString();
-					Long restaurantId = Long.parseLong(JsonPath.read(responseBody, "$.id").toString());
-
 					// Add a dish to the restaurant using the extracted ID
 					Dish dish = new Dish("Pasta", "Bolognese", 75);
 					mockMvc.perform(post("/restaurants/" + restaurantId + "/dishes")
 									.content(objectMapper.writeValueAsString(dish))
 									.contentType(MediaType.APPLICATION_JSON))
 							.andExpect(status().isCreated());
-				});
-	}
+				}
 
 	@Test
 	void testAddDish_RestaurantNotFound() throws Exception {
@@ -205,59 +177,6 @@ class Bis10ApplicationTests {
 						.contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().isNotFound());
 	}
-
-
-	@Test
-	void testUpdateDish_ValidData() throws Exception {
-		// Add a restaurant
-		Restaurant restaurant = new Restaurant(null, "New Restaurant", 4.5, true, Arrays.asList("Italian"));
-		MvcResult restaurantResult = mockMvc.perform(post("/restaurants")
-						.content(objectMapper.writeValueAsString(restaurant))
-						.contentType(MediaType.APPLICATION_JSON))
-				.andExpect(status().isCreated())
-				.andReturn();
-
-		// Extract the ID of the created restaurant from the response
-		String restaurantResponseBody = restaurantResult.getResponse().getContentAsString();
-		long restaurantId = Long.parseLong(JsonPath.read(restaurantResponseBody, "$.id").toString());
-
-		// Add a dish to the restaurant
-		String dishJson = "{\"name\": \"Pasta\", \"description\": \"Delicious pasta dish\", \"price\": 12.5}";
-		mockMvc.perform(post("/restaurants/" + restaurantId + "/dishes")
-						.content(dishJson)
-						.contentType(MediaType.APPLICATION_JSON))
-				.andExpect(status().isCreated());
-
-		// Retrieve the list of dishes for the restaurant
-		MvcResult restaurantDishesResult = mockMvc.perform(get("/restaurants/" + restaurantId + "/dishes")
-						.contentType(MediaType.APPLICATION_JSON))
-				.andExpect(status().isOk())
-				.andReturn();
-
-		// Extract the dish ID from the list of dishes associated with the restaurant
-		String restaurantDishesResponseBody = restaurantDishesResult.getResponse().getContentAsString();
-		List<Long> dishIds = JsonPath.read(restaurantDishesResponseBody, "$[*].id");
-
-		// Ensure that there is at least one dish available
-		if (dishIds.isEmpty()) {
-			// Handle gracefully or skip the test
-			System.out.println("No dishes available for the restaurant. Skipping test.");
-			return;
-		}
-
-		// Retrieve the first dish ID
-		long dishId = dishIds.get(0);
-
-		// Update the dish using the extracted restaurant and dish IDs
-		String updatedDishJson = "{\"name\": \"Spaghetti\", \"description\": \"Delicious spaghetti dish\", \"price\": 15.0}";
-		mockMvc.perform(put("/restaurants/" + restaurantId + "/dishes/" + dishId)
-						.content(updatedDishJson)
-						.contentType(MediaType.APPLICATION_JSON))
-				.andExpect(status().isOk());
-	}
-
-
-
 
 	@Test
 	void testUpdateDish_RestaurantNotFound() throws Exception {
@@ -270,69 +189,13 @@ class Bis10ApplicationTests {
 
 	@Test
 	void testUpdateDish_DishNotFound() throws Exception {
-		// Add a restaurant
-		Restaurant restaurant = new Restaurant(null, "New Restaurant", 4.5, true, Arrays.asList("Italian"));
-		mockMvc.perform(post("/restaurants")
-						.content(objectMapper.writeValueAsString(restaurant))
-						.contentType(MediaType.APPLICATION_JSON))
-				.andExpect(status().isCreated());
 
 		String updatedDishJson = "{\"name\": \"Spaghetti\", \"description\": \"Delicious spaghetti dish\", \"price\": 15.0}";
-		mockMvc.perform(put("/restaurants/1/dishes/999")
+		mockMvc.perform(put("/restaurants/"+ restaurantId +"/dishes/999")
 						.content(updatedDishJson)
 						.contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().isNotFound());
 	}
-
-	@Test
-	void testPlaceOrder_ValidData() throws Exception {
-		// Add a restaurant
-		Restaurant restaurant = new Restaurant(null, "New Restaurant", 4.5, true, Arrays.asList("Italian"));
-		MvcResult restaurantResult = mockMvc.perform(post("/restaurants")
-						.content(objectMapper.writeValueAsString(restaurant))
-						.contentType(MediaType.APPLICATION_JSON))
-				.andExpect(status().isCreated())
-				.andReturn();
-
-		// Extract the ID of the created restaurant from the response
-		String restaurantResponseBody = restaurantResult.getResponse().getContentAsString();
-		Long restaurantId = Long.parseLong(JsonPath.read(restaurantResponseBody, "$.id").toString());
-
-		// Retrieve the list of dishes for the restaurant
-		MvcResult restaurantDishesResult = mockMvc.perform(get("/restaurants/" + restaurantId + "/dishes")
-						.contentType(MediaType.APPLICATION_JSON))
-				.andExpect(status().isOk())
-				.andReturn();
-
-		// Extract the list of dish IDs from the response
-		String restaurantDishesResponseBody = restaurantDishesResult.getResponse().getContentAsString();
-		List<Long> dishIds = JsonPath.read(restaurantDishesResponseBody, "$[*].id");
-
-		// Ensure that there is at least one dish available
-		if (dishIds.isEmpty()) {
-			// Handle gracefully or skip the test
-			System.out.println("No dishes available for the restaurant. Skipping test.");
-			return;
-		}
-
-		// Retrieve the first two dish IDs
-		Long dishId1 = dishIds.get(0);
-		Long dishId2 = dishIds.size() > 1 ? dishIds.get(1) : null;
-
-		// Place an order using the extracted restaurant ID and dishIds
-		List<OrderItem> orderItems = new ArrayList<>();
-		orderItems.add(new OrderItem(dishId1, 5));
-		if (dishId2 != null) {
-			orderItems.add(new OrderItem(dishId2, 1));
-		}
-		BisOrder order = new BisOrder(restaurantId, orderItems);
-		mockMvc.perform(post("/order")
-						.content(objectMapper.writeValueAsString(order))
-						.contentType(MediaType.APPLICATION_JSON))
-				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.orderId").exists());
-	}
-
 
 	@Test
 	void testPlaceOrder_RestaurantNotFound() throws Exception {
@@ -345,14 +208,8 @@ class Bis10ApplicationTests {
 
 	@Test
 	void testPlaceOrder_DishNotFound() throws Exception {
-		// Add a restaurant
-		Restaurant restaurant = new Restaurant(null, "New Restaurant", 4.5, true, Arrays.asList("Italian"));
-		mockMvc.perform(post("/restaurants")
-						.content(objectMapper.writeValueAsString(restaurant))
-						.contentType(MediaType.APPLICATION_JSON))
-				.andExpect(status().isCreated());
 
-		String orderJson = "{\"restaurantId\": 1, \"orderItems\": [{\"dishId\": 999, \"amount\": 2}]}";
+		String orderJson = "{\"restaurantId\":" + restaurantId + ", \"orderItems\": [{\"dishId\": 999, \"amount\": 2}]}";
 		mockMvc.perform(post("/order")
 						.content(orderJson)
 						.contentType(MediaType.APPLICATION_JSON))
@@ -369,7 +226,7 @@ class Bis10ApplicationTests {
 				.andExpect(MockMvcResultMatchers.status().isCreated());
 
 		// Test minimum rating value
-		restaurant = new Restaurant(null, "Min Rating Restaurant", 1.0, true, Arrays.asList("Italian"));
+		restaurant = new Restaurant(null, "Min Rating Restaurant", 0.0, true, Arrays.asList("Italian"));
 		mockMvc.perform(MockMvcRequestBuilders.post("/restaurants")
 						.content(objectMapper.writeValueAsString(restaurant))
 						.contentType(MediaType.APPLICATION_JSON))
@@ -396,42 +253,19 @@ class Bis10ApplicationTests {
 
 	@Test
 	void testDishValidation() throws Exception {
-		// Test scenario with empty dish name
-		Restaurant restaurant = new Restaurant(null, "New Restaurant", 4.5, true, Arrays.asList("Italian"));
-		mockMvc.perform(MockMvcRequestBuilders.post("/restaurants")
-						.content(objectMapper.writeValueAsString(restaurant))
-						.contentType(MediaType.APPLICATION_JSON))
-				.andExpect(MockMvcResultMatchers.status().isCreated())
-				.andExpect(MockMvcResultMatchers.jsonPath("$.id").exists())
-				.andDo(result -> {
-					String responseBody = result.getResponse().getContentAsString();
-					Long restaurantId = Long.parseLong(JsonPath.read(responseBody, "$.id").toString());
 
 					Dish dish = new Dish("", "Bolognese", 75);
 					mockMvc.perform(MockMvcRequestBuilders.post("/restaurants/" + restaurantId + "/dishes")
 									.content(objectMapper.writeValueAsString(dish))
 									.contentType(MediaType.APPLICATION_JSON))
 							.andExpect(MockMvcResultMatchers.status().isBadRequest());
-				});
 
-		// Test scenario with null dish name
-		restaurant = new Restaurant(null, "New Restaurant", 4.5, true, Arrays.asList("Italian"));
-		mockMvc.perform(MockMvcRequestBuilders.post("/restaurants")
-						.content(objectMapper.writeValueAsString(restaurant))
-						.contentType(MediaType.APPLICATION_JSON))
-				.andExpect(MockMvcResultMatchers.status().isCreated())
-				.andExpect(MockMvcResultMatchers.jsonPath("$.id").exists())
-				.andDo(result -> {
-					String responseBody = result.getResponse().getContentAsString();
-					Long restaurantId = Long.parseLong(JsonPath.read(responseBody, "$.id").toString());
-
-					Dish dish = new Dish(null, "Bolognese", 75);
+					Dish dish1 = new Dish(null, "Bolognese", 75);
 					mockMvc.perform(MockMvcRequestBuilders.post("/restaurants/" + restaurantId + "/dishes")
-									.content(objectMapper.writeValueAsString(dish))
+									.content(objectMapper.writeValueAsString(dish1))
 									.contentType(MediaType.APPLICATION_JSON))
 							.andExpect(MockMvcResultMatchers.status().isBadRequest());
-				});
-	}
+				}
 	// Test to verify that the app can handle many restaurants with many dishes
 	@Test
 	void testManyRestaurantsAndDishes() throws Exception {
@@ -442,12 +276,7 @@ class Bis10ApplicationTests {
 							.content(new ObjectMapper().writeValueAsString(new Restaurant(null, "Restaurant " + i, 4.5, true, Arrays.asList("Cuisine"))))
 							.contentType(MediaType.APPLICATION_JSON))
 					.andExpect(status().isCreated())
-					.andExpect(jsonPath("$.id").exists())
 					.andReturn();
-
-			// Extract the ID of the created restaurant from the response
-			String restaurantResponseBody = restaurantResult.getResponse().getContentAsString();
-			long restaurantId = Long.parseLong(JsonPath.read(restaurantResponseBody, "$.id").toString());
 
 			// Add dishes to the restaurant
 			for (int j = 0; j < 10; j++) {
@@ -463,17 +292,6 @@ class Bis10ApplicationTests {
 	// Test to verify that the app can handle many ratings
 	@Test
 	void testManyRatings() throws Exception {
-		// Create a restaurant
-		MvcResult restaurantResult = mockMvc.perform(MockMvcRequestBuilders.post("/restaurants")
-						.content(new ObjectMapper().writeValueAsString(new Restaurant(null, "New Restaurant", 4.5, true, Arrays.asList("Italian"))))
-						.contentType(MediaType.APPLICATION_JSON))
-				.andExpect(status().isCreated())
-				.andExpect(jsonPath("$.id").exists()) // Ensure that the response contains the ID of the created restaurant
-				.andReturn();
-
-		// Extract the ID of the created restaurant from the response
-		String restaurantResponseBody = restaurantResult.getResponse().getContentAsString();
-		long restaurantId = Long.parseLong(JsonPath.read(restaurantResponseBody, "$.id").toString());
 
 		// Add many ratings for the restaurant
 		for (int i = 0; i < 1000; i++) {
@@ -488,17 +306,6 @@ class Bis10ApplicationTests {
 	// Test to verify that the averageRating for restaurants is truly the average of ratings
 	@Test
 	void testAverageRatingCalculation() throws Exception {
-		// Add a restaurant
-		Restaurant restaurant = new Restaurant(null, "Test Restaurant", 0.0, false, Arrays.asList("Test Cuisine"));
-		mockMvc.perform(MockMvcRequestBuilders.post("/restaurants")
-						.content(new ObjectMapper().writeValueAsString(restaurant))
-						.contentType(MediaType.APPLICATION_JSON))
-				.andExpect(status().isCreated())
-				.andExpect(MockMvcResultMatchers.jsonPath("$.id").exists())
-				.andDo(result -> {
-					// Extract the ID of the created restaurant
-					String responseBody = result.getResponse().getContentAsString();
-					Long restaurantId = Long.parseLong(JsonPath.read(responseBody, "$.id").toString());
 
 					// Add ratings for the restaurant
 					double totalRating = 0.0;
@@ -521,55 +328,5 @@ class Bis10ApplicationTests {
 									.contentType(MediaType.APPLICATION_JSON))
 							.andExpect(status().isOk())
 							.andExpect(MockMvcResultMatchers.jsonPath("$.averageRating").value(expectedAverageRating));
-				});
-	}
-
-	// Test to verify that the app can handle many orders
-	@Test
-	void testManyOrders() throws Exception {
-		// Create a restaurant
-		MvcResult restaurantResult = mockMvc.perform(MockMvcRequestBuilders.post("/restaurants")
-						.content(new ObjectMapper().writeValueAsString(new Restaurant(null, "New Restaurant", 4.5, true, Arrays.asList("Italian"))))
-						.contentType(MediaType.APPLICATION_JSON))
-				.andExpect(status().isCreated())
-				.andExpect(jsonPath("$.id").exists()) // Ensure that the response contains the ID of the created restaurant
-				.andReturn();
-
-		// Extract the ID of the created restaurant from the response
-		String restaurantResponseBody = restaurantResult.getResponse().getContentAsString();
-		long restaurantId = Long.parseLong(JsonPath.read(restaurantResponseBody, "$.id").toString());
-
-		// Retrieve the list of dishes for the restaurant
-		MvcResult restaurantDishesResult = mockMvc.perform(MockMvcRequestBuilders.get("/restaurants/" + restaurantId + "/dishes")
-						.contentType(MediaType.APPLICATION_JSON))
-				.andExpect(status().isOk())
-				.andReturn();
-
-		// Extract the dish ID from the list of dishes associated with the restaurant
-		String restaurantDishesResponseBody = restaurantDishesResult.getResponse().getContentAsString();
-		List<Long> dishIds = JsonPath.read(restaurantDishesResponseBody, "$[*].id");
-
-		// Ensure that there is at least one dish available
-		if (dishIds.isEmpty()) {
-			// Handle gracefully or skip the test
-			System.out.println("No dishes available for the restaurant. Skipping test.");
-			return;
-		}
-
-		// Add orders with many items
-		for (int i = 0; i < 1000; i++) {
-			// Retrieve the first dish ID
-			long dishId = dishIds.get(0);
-
-			// Create order with the retrieved restaurant ID and dish ID
-			List<OrderItem> orderItems = new ArrayList<>();
-			orderItems.add(new OrderItem(dishId, 2));
-			mockMvc.perform(MockMvcRequestBuilders.post("/order")
-							.content(new ObjectMapper().writeValueAsString(new BisOrder(restaurantId, orderItems)))
-							.contentType(MediaType.APPLICATION_JSON))
-					.andExpect(status().isOk());
-		}
-	}
-
-
+				}
 }

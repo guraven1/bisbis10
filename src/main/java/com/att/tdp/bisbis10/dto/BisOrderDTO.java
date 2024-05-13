@@ -1,4 +1,4 @@
-package com.att.tdp.bisbis10.DTO;
+package com.att.tdp.bisbis10.dto;
 
 public class BisOrderDTO {
   private String orderId;

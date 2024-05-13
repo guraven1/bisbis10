@@ -1,6 +1,6 @@
 package com.att.tdp.bisbis10.controller;
 
-import com.att.tdp.bisbis10.DTO.BisOrderDTO;
+import com.att.tdp.bisbis10.dto.BisOrderDTO;
 import com.att.tdp.bisbis10.assembler.OrderModelAssembler;
 import com.att.tdp.bisbis10.entity.BisOrder;
 import com.att.tdp.bisbis10.entity.Dish;
