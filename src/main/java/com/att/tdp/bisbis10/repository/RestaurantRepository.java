@@ -1,7 +1,7 @@
 package com.att.tdp.bisbis10.repository;
 
-import com.att.tdp.bisbis10.projection.RestaurantProjection;
 import com.att.tdp.bisbis10.entity.Restaurant;
+import com.att.tdp.bisbis10.projection.RestaurantProjection;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 

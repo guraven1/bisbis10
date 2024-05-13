@@ -6,6 +6,7 @@ import com.att.tdp.bisbis10.exception.RestaurantNotFoundException;
 import com.att.tdp.bisbis10.service.RatingService;
 import com.att.tdp.bisbis10.service.RestaurantService;
 import com.att.tdp.bisbis10.validator.RatingValidator;
+import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,8 +14,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-
-import javax.validation.Valid;
 
 /**
  * Controller class for handling rating-related operations.
@@ -47,5 +46,6 @@ public class RatingController {
     }
     Restaurant restaurant = restaurantService.getRestaurantById(ratingData.getRestaurantId());
     ratingService.addRating(ratingData, restaurant);
-    return new ResponseEntity<>(HttpStatus.OK);  }
+    return new ResponseEntity<>(HttpStatus.OK);
+  }
 }

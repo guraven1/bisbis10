@@ -1,8 +1,8 @@
 package com.att.tdp.bisbis10.service;
 
-import com.att.tdp.bisbis10.projection.RestaurantProjection;
 import com.att.tdp.bisbis10.entity.Restaurant;
 import com.att.tdp.bisbis10.exception.RestaurantNotFoundException;
+import com.att.tdp.bisbis10.projection.RestaurantProjection;
 import com.att.tdp.bisbis10.repository.RestaurantRepository;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
