@@ -2,7 +2,7 @@
 
 ## Overview
 
-MyProject is a web application designed to manage restaurants, dishes, orders, and ratings. It provides functionalities for adding, updating, and deleting restaurants and their corresponding dishes, as well as placing and managing orders and ratings.
+Bisbis10 is a web application designed to manage restaurants, dishes, orders, and ratings. It provides functionalities for adding, updating, and deleting restaurants and their corresponding dishes, as well as placing and managing orders and ratings.
 
 ## Bisbis10
 
